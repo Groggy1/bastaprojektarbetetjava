@@ -45,3 +45,4 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
+/OverordnatSystem/nbproject/private/
