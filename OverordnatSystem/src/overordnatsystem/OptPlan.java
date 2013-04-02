@@ -22,11 +22,10 @@ public class OptPlan {
         this.ds = ds;
     }
 
-    public void createPlan() {
+    public void createPlan(int start,int stop) {
         nodes = new ArrayList<Vertex>();
         edges = new ArrayList<Edge>();
-        LinkedList<Vertex> path = null;
-        //ArrayList<LinkedList<Vertex>> paths = null;
+        LinkedList<Vertex> path;
         int diff;
 
         for (int i = 0; i < ds.nodes; i++) {
@@ -44,21 +43,12 @@ public class OptPlan {
         Graph graph = new Graph(nodes, edges);
         DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
         // Compute shortest path
-        for (int i = 1; i < ds.nodes; i++) {
-            System.out.println("i" + i);
-            for (int j = 1; j < ds.nodes; j++) {
-                System.out.println("j" + j);
-                if (i != j) {
-                    dijkstra.execute(nodes.get(i));
-                    path = dijkstra.getPath(nodes.get(j));
-                    //paths.add(path);
-                }
-            }
-        }
+        dijkstra.execute(nodes.get(start));
+        path = dijkstra.getPath(nodes.get(stop));
+
         // Get shortest path
         for (int i = 0; i < path.size(); i++) {
             System.out.println(path.get(i));
-            //System.out.println(paths.get(i));
         }
     }
 }
