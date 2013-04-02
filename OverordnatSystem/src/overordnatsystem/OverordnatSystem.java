@@ -88,7 +88,17 @@ public class OverordnatSystem {
         int start = 3;
         int stop = 32;
         OptPlan op = new OptPlan(ds);
-        op.createPlan(start, stop);
+
+        for (i = 0; i < ds3.orders; i++) {
+            if (ds3.orderStart[i] != ds3.orderEnd[i]) {
+                System.out.println("ds.shelfNode[ds3.orderStart[i]] " + ds.shelfNode[ds3.orderStart[i]]);
+                System.out.println("ds.shelfNode[ds3.orderEnd[i]] " + ds.shelfNode[ds3.orderEnd[i]]);
+                start = (int) ds.shelfNode[ds3.orderStart[i]];
+                stop = (int) ds.shelfNode[ds3.orderEnd[i]];
+                op.createPlan(start, stop);
+            }
+            System.out.println("\n\n");
+        }
     }
 
     /**

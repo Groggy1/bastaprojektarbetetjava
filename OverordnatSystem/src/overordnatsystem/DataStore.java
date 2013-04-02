@@ -23,6 +23,10 @@ public class DataStore {
     int orders;
     int[] orderStart;
     int[] orderEnd;
+    int[] shelfNumber = new int[20];
+    int[] shelfNode = new int[20];
+    String[] shelfDirection = new String[20];
+    int[] arcColor = new int[1000];
 
     public DataStore() {
         // Initialize the datastore with fixed size arrays for storing the network data
@@ -104,6 +108,21 @@ public class DataStore {
                 arcStart[i] = Integer.parseInt(sline[0].trim());
                 arcEnd[i] = Integer.parseInt(sline[1].trim());
             }
+
+            for (int i = 0; i < shelves; i++) {
+                line = scanner.nextLine();
+                //split space separated data on line
+                sline = line.split(" ");
+                if ("A".equals(sline[0].trim())) {
+                    shelfNumber[i] = 0; // Let the A shelf be represented by 0
+                } else {
+                    shelfNumber[i] = Integer.parseInt(sline[0].trim());
+                }
+                shelfNode[i] = Integer.parseInt(sline[1].trim());
+                shelfDirection[i] = sline[2].trim();
+            }
+            // Debug printout: print data for the first shelf
+            System.out.println("Shelf 1: " + shelfNumber[0] + " " + shelfNode[0] + " " + shelfDirection[0]);
 
 
             networkRead = true;  // Indicate that all network data is in place in the DataStore
