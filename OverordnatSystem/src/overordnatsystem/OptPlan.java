@@ -22,7 +22,7 @@ public class OptPlan {
         this.ds = ds;
     }
 
-    public void createPlan(int start,int stop) {
+    public LinkedList<Vertex> createPlan(int start, int stop) {
         nodes = new ArrayList<Vertex>();
         edges = new ArrayList<Edge>();
         LinkedList<Vertex> path;
@@ -30,7 +30,7 @@ public class OptPlan {
 
         for (int i = 0; i < ds.nodes; i++) {
             Vertex lovation = new Vertex("" + (i + 1), "Nod #" + (i + 1));
-            //System.out.println(lovation.toString());
+            //System.out.println("lovation.getId()" + lovation.getId());
             nodes.add(lovation);
         }
 
@@ -38,17 +38,23 @@ public class OptPlan {
             diff = (int) Math.max(Math.abs(ds.nodeY[ds.arcStart[i] - 1] - ds.nodeY[ds.arcEnd[i] - 1]), Math.abs(ds.nodeX[ds.arcStart[i] - 1] - ds.nodeX[ds.arcEnd[i] - 1]));
             Edge lane = new Edge("" + (i + 1), nodes.get(ds.arcStart[i] - 1), nodes.get(ds.arcEnd[i] - 1), diff);
             edges.add(lane);
+            //System.out.println("ds.arcStart[i] " + ds.arcStart[i]);
         }
 
         Graph graph = new Graph(nodes, edges);
         DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
         // Compute shortest path
-        dijkstra.execute(nodes.get(start));
-        path = dijkstra.getPath(nodes.get(stop));
+        dijkstra.execute(nodes.get(start - 1));
+        path = dijkstra.getPath(nodes.get(stop - 1));
+        //System.out.println("nodes.get(start) " + nodes.get(start-1));
+        //System.out.println("nodes.get(stop) " + nodes.get(stop-1));
+        /*
+         // Get shortest path
+         for (int i = 0; i < path.size(); i++) {
+         System.out.println(path.get(i));
+         }
+         */
 
-        // Get shortest path
-        for (int i = 0; i < path.size(); i++) {
-            System.out.println(path.get(i));
-        }
+        return path;
     }
 }
