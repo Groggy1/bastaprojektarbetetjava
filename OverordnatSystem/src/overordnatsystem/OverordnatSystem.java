@@ -4,6 +4,7 @@
  */
 package overordnatsystem;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -83,28 +84,134 @@ public class OverordnatSystem {
 
                 //System.out.println("ds.shelfDirection[ds3.orderStart[i]] " + ds.shelfDirection[ds3.orderStart[i]]);
 
+                String[] GPS = new String[path.size()];
                 for (int j = 0; j < path.size(); j++) {
                     System.out.println(path.get(j).getId());
                     if (j == 0) {
                         if (ds.shelfDirection[ds3.orderStart[i]].equalsIgnoreCase("N")) {
-                            System.out.println("Kul, kanske");
+                            int a = Integer.parseInt(path.get(j).getId());
+                            int b = Integer.parseInt(path.get(j + 1).getId());
+                            if (a - b == 1) {
+                                GPS[j] = "L";
+                                //System.out.println("KUL!!!");
+                                //System.out.println("GPS[j] " + GPS[j]);
+                            } else if (b - a == 1) {
+                                GPS[j] = "R";
+                                //System.out.println("KUL2!!!");
+                                //System.out.println("GPS[j] " + GPS[j]);
+                            }
                         } else if (ds.shelfDirection[ds3.orderStart[i]].equalsIgnoreCase("S")) {
-                            System.out.println("Kul, kanske1");
+                            int a = Integer.parseInt(path.get(j).getId());
+                            int b = Integer.parseInt(path.get(j + 1).getId());
+                            if (a - b == 1) {
+                                GPS[j] = "R";
+                                //System.out.println("KUL3!!!");
+                                //System.out.println("GPS[j] " + GPS[j]);
+                            } else if (b - a == 1) {
+                                GPS[j] = "L";
+                                //System.out.println("KUL4!!!");
+                                //System.out.println("GPS[j] " + GPS[j]);
+                            }
+                            //System.out.println("Kul, kanske1");
                         } else if (ds.shelfDirection[ds3.orderStart[i]].equalsIgnoreCase("V")) {
-                            System.out.println("Kul, kanske2");
+                            int a = Integer.parseInt(path.get(j).getId());
+                            int b = Integer.parseInt(path.get(j + 1).getId());
+                            if (a - b == 8) {
+                                GPS[j] = "L";
+                                //System.out.println("KUL5!!!");
+                                //System.out.println("GPS[j] " + GPS[j]);
+                            } else if (b - a == 1) {
+                                GPS[j] = "R";
+                                //System.out.println("KUL6!!!");
+                                //System.out.println("GPS[j] " + GPS[j]);
+                            }
+                            //System.out.println("Kul, kanske2");
                         }
                     } else if (j == path.size() - 1) {
                         if (ds.shelfDirection[ds3.orderEnd[i]].equalsIgnoreCase("N")) {
-                            System.out.println("Kul, kanske3");
+                            int a = Integer.parseInt(path.get(j - 1).getId());
+                            int b = Integer.parseInt(path.get(j).getId());
+                            if (a - b == 1) {
+                                GPS[j] = "A";
+                                //System.out.println("KUL7!!!");
+                                //System.out.println("GPS[j] " + GPS[j]);
+                            } else if (b - a == 1) {
+                                GPS[j] = "B";
+                                //System.out.println("KUL8!!!");
+                                //System.out.println("GPS[j] " + GPS[j]);
+                            }
+                            //System.out.println("Kul, kanske3");
+                        } else if (ds.shelfDirection[ds3.orderEnd[i]].equalsIgnoreCase("S")) {
+                            int a = Integer.parseInt(path.get(j - 1).getId());
+                            int b = Integer.parseInt(path.get(j).getId());
+                            if (a - b == 1) {
+                                GPS[j] = "B";
+                                //System.out.println("KUL9!!!");
+                                //System.out.println("GPS[j] " + GPS[j]);
+                            } else if (b - a == 1) {
+                                GPS[j] = "A";
+                                //System.out.println("KUL10!!!");
+                                //System.out.println("GPS[j] " + GPS[j]);
+                            }
+                            //System.out.println("Kul, kanske4");
+                        } else if (ds.shelfDirection[ds3.orderEnd[i]].equalsIgnoreCase("V")) {
+                            int a = Integer.parseInt(path.get(j - 1).getId());
+                            int b = Integer.parseInt(path.get(j).getId());
+                            if (a - b == 1) {
+                                GPS[j] = "A";
+                                //System.out.println("KUL11!!!");
+                                //System.out.println("GPS[j] " + GPS[j]);
+                            } else if (b - a == 8) {
+                                GPS[j] = "B";
+                                //System.out.println("KUL12!!!");
+                                //System.out.println("GPS[j] " + GPS[j]);
+                            }
+                            //System.out.println("Kul, kanske5");
                         }
-                        else if (ds.shelfDirection[ds3.orderEnd[i]].equalsIgnoreCase("S")) {
-                            System.out.println("Kul, kanske4");
-                        }
-                        else if (ds.shelfDirection[ds3.orderEnd[i]].equalsIgnoreCase("V")) {
-                            System.out.println("Kul, kanske5");
+                    } else {
+                        /* Det är något som strular... Ger felaktiga tecken för
+                         * fram/höger/vänster.
+                         * 24 -> 23 -> 15 -> 15 -> 14... L,L,R,A.. R är fel!
+                         * 7 -> 6 -> 14... L,L,B... Andra L är fel...
+                         * 16->15->14 ger rakt... INTE RÄTT!!!!
+                         * 
+                         * Rätt!
+                         * 17 -> 16 -> 8 -> 7
+                         * 32 -> 31 -> 25 -> 26 -> 18 -> 17
+                         */
+                        int a = Integer.parseInt(path.get(j).getId());
+                        int b = Integer.parseInt(path.get(j + 1).getId());
+                        int c = Integer.parseInt(path.get(j - 1).getId());
+                        if (Math.abs(a - b) == 1 && Math.abs(a - c) == 1) {
+                            GPS[j] = "F";
+                            //System.out.println("KUL13!!!");
+                            //System.out.println("GPS[j] " + GPS[j]);
+                        } else if (Math.abs(a - b) == 1 && Math.abs(a - c) > 1) {
+                            if (a - b == 1) {
+                                GPS[j] = "R";
+                                //System.out.println("KUL14!!!");
+                                //System.out.println("GPS[j] " + GPS[j]);
+                            }
+                            if (b - a == 1) {
+                                GPS[j] = "L";
+                                //System.out.println("KUL15!!!");
+                                //System.out.println("GPS[j] " + GPS[j]);
+                            }
+                        } else if (Math.abs(a - b) > 1 && Math.abs(a - c) == 1) {
+                            if (a - c == 1) {
+                                GPS[j] = "R";
+                                //System.out.println("KUL16!!!");
+                                //System.out.println("GPS[j] " + GPS[j]);
+                            }
+                            if (c - a == 1) {
+                                GPS[j] = "L";
+                                //System.out.println("KUL17!!!");
+                                //System.out.println("GPS[j] " + GPS[j]);
+                            }
                         }
                     }
                 }
+                System.out.println("\n" + Arrays.toString(GPS));
             }
             System.out.println("\n");
         }
