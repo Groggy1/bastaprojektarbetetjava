@@ -21,8 +21,10 @@ public class OverordnatSystem {
         DataStore ds2 = new DataStore();
         ds3 = new DataStore();
 
-        ds.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Lagernatverk_20130213.csv");
-        ds2.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Orders_20130211.csv");
+        //ds.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Lagernatverk_20130213.csv");
+        //ds2.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Orders_20130211.csv");
+        ds.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Lagernatverk_20130213.csv");
+        ds2.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
 
         ds.readNet();
         ds2.readOrders();
@@ -169,47 +171,115 @@ public class OverordnatSystem {
                             //System.out.println("Kul, kanske5");
                         }
                     } else {
-                        /* Det är något som strular... Ger felaktiga tecken för
-                         * fram/höger/vänster.
-                         * 24 -> 23 -> 15 -> 15 -> 14... L,L,R,A.. R är fel!
-                         * 7 -> 6 -> 14... L,L,B... Andra L är fel...
-                         * 16->15->14 ger rakt... INTE RÄTT!!!!
-                         * 
-                         * Rätt!
-                         * 17 -> 16 -> 8 -> 7
-                         * 32 -> 31 -> 25 -> 26 -> 18 -> 17
-                         */
-                        int a = Integer.parseInt(path.get(j).getId());
-                        int b = Integer.parseInt(path.get(j + 1).getId());
-                        int c = Integer.parseInt(path.get(j - 1).getId());
-                        if (Math.abs(a - b) == 1 && Math.abs(a - c) == 1) {
+                        int a = Integer.parseInt(path.get(j - 1).getId());
+                        int b = Integer.parseInt(path.get(j).getId());
+                        int c = Integer.parseInt(path.get(j + 1).getId());
+                        //System.out.println("FUUUU");
+                        //System.out.println("A " + a);
+                        //System.out.println("B " + b);
+                        //System.out.println("C " + c);
+
+                        if (Math.abs(a - b) > 1 && Math.abs(b - c) > 1) {
+                            //rakt fram lodrätt
                             GPS[j] = "F";
-                            //System.out.println("KUL13!!!");
-                            //System.out.println("GPS[j] " + GPS[j]);
-                        } else if (Math.abs(a - b) == 1 && Math.abs(a - c) > 1) {
+                            System.out.println("KUL");
+                        } else if (a - b > 1 && Math.abs(c - b) == 1) {
+                            //Vänster/höger sväng om riktning norr -> söder
+                            if(c - b == 1){
+                                GPS[j] = "L";
+                            } else if (b - c == 1){
+                                GPS[j] = "R";
+                            }
+                            System.out.println("KUL3");
+                        } else if (Math.abs(a - b) == 1 && c - b > 1) {
+                            //Vänster/höger sväng om riktning vågrätt
                             if (a - b == 1) {
                                 GPS[j] = "R";
-                                //System.out.println("KUL14!!!");
-                                //System.out.println("GPS[j] " + GPS[j]);
-                            }
-                            if (b - a == 1) {
+                            } else if (b - a == 1) {
                                 GPS[j] = "L";
-                                //System.out.println("KUL15!!!");
-                                //System.out.println("GPS[j] " + GPS[j]);
                             }
-                        } else if (Math.abs(a - b) > 1 && Math.abs(a - c) == 1) {
-                            if (a - c == 1) {
+                            System.out.println("KUL5");
+                        } else if (a == 14 || b == 14 || c == 14) {
+                            //ta hand om alla elaka bågar via nod 14...
+                            System.out.println("KUL2");
+                        } else if (Math.abs(a - b) == 1 && Math.abs(b - c) == 1) {
+                            //rakt fram vågrätt
+                            GPS[j] = "F";
+                            System.out.println("KUL4");
+                        } else if (Math.abs(a - b) == 1 && b - c > 1) {
+                            //Vänster/höger sväng om riktning vågrätt
+                            if (a - b == 1) {
+                                GPS[j] = "L";
+                            } else if (b - a == 1) {
                                 GPS[j] = "R";
-                                //System.out.println("KUL16!!!");
-                                //System.out.println("GPS[j] " + GPS[j]);
                             }
-                            if (c - a == 1) {
+                            System.out.println("KUL7");
+                        } else if (Math.abs(a - b) > 1 && c - b == 1) {
+                            //Vänster/höger sväng om riktning vågrätt
+                            if (a - b > 1) {
                                 GPS[j] = "L";
-                                //System.out.println("KUL17!!!");
-                                //System.out.println("GPS[j] " + GPS[j]);
+                            } else if (b - a > 1) {
+                                GPS[j] = "R";
                             }
+                            System.out.println("KUL6");
                         }
                     }
+                    /*
+                     else {
+                     /* Det är något som strular... Ger felaktiga tecken för
+                     * fram/höger/vänster.
+                     * 24 -> 23 -> 15 -> 15 -> 14... L,L,R,A.. R är fel!
+                     * 16->15->14 ger rakt... INTE RÄTT!!!!
+                     * 
+                     * Rätt!
+                     * 17 -> 16 -> 8 -> 7
+                     * 32 -> 31 -> 25 -> 26 -> 18 -> 17
+                     *
+                     int a = Integer.parseInt(path.get(j).getId());
+                     int b = Integer.parseInt(path.get(j + 1).getId());
+                     int c = Integer.parseInt(path.get(j - 1).getId());
+                     if (a == 15 && b == 14 && c - a == 1) {
+                     GPS += "L";
+                     System.out.println("KUL33!!!");
+                     } else if (a == 15 && b == 14 && c - a > 1) {
+                     GPS += "F";
+                     System.out.println("KUL34!!!");
+                     } else if (Math.abs(a - b) == 1 && Math.abs(a - c) == 1) {
+                     GPS += "F";
+                     System.out.println("KUL13!!!");
+                     //System.out.println("GPS[j] " + GPS[j]);
+                     } else if (Math.abs(a - b) == 1 && Math.abs(a - c) > 1) {
+                     if (a - b == 1) {
+                     GPS += "R";
+                     System.out.println("KUL14!!!");
+                     //System.out.println("GPS[j] " + GPS[j]);
+                     } else if (b - a == 1) {
+                     GPS += "L";
+                     System.out.println("KUL15!!!");
+                     //System.out.println("GPS[j] " + GPS[j]);
+                     }
+                     } else if (a - b > 1 && Math.abs(a - c) == 1) {
+                     if (a - c == 1) {
+                     GPS += "R";
+                     System.out.println("KUL16!!!");
+                     //System.out.println("GPS[j] " + GPS[j]);
+                     } else if (c - a == 1) {
+                     GPS += "L";
+                     System.out.println("KUL17!!!");
+                     //System.out.println("GPS[j] " + GPS[j]);
+                     }
+                     } else if (b - a > 1 && Math.abs(a - c) == 1) {
+                     if (a - c == 1) {
+                     GPS += "L";
+                     System.out.println("KUL26!!!");
+                     //System.out.println("GPS[j] " + GPS[j]);
+                     } else if (c - a == 1) {
+                     GPS += "R";
+                     System.out.println("KUL27!!!");
+                     //System.out.println("GPS[j] " + GPS[j]);
+                     }
+                     }
+                     }*/
                 }
                 System.out.println("\n" + Arrays.toString(GPS));
             }
