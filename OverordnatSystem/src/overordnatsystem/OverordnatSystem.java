@@ -21,10 +21,10 @@ public class OverordnatSystem {
         DataStore ds2 = new DataStore();
         ds3 = new DataStore();
 
-        //ds.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Lagernatverk_20130213.csv");
-        //ds2.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Orders_20130211.csv");
-        ds.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Lagernatverk_20130213.csv");
-        ds2.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
+        ds.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Lagernatverk_20130213.csv");
+        ds2.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Orders_20130211.csv");
+        //ds.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Lagernatverk_20130213.csv");
+        //ds2.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
 
         ds.readNet();
         ds2.readOrders();
@@ -183,15 +183,15 @@ public class OverordnatSystem {
                             //rakt fram lodrätt
                             GPS[j] = "F";
                             System.out.println("KUL");
-                        } else if (a - b > 1 && Math.abs(c - b) == 1) {
+                        } else if (a - b > 1 && Math.abs(c - b) == 1 && b != 15) {
                             //Vänster/höger sväng om riktning norr -> söder
-                            if(c - b == 1){
+                            if (c - b == 1) {
                                 GPS[j] = "L";
-                            } else if (b - c == 1){
+                            } else if (b - c == 1) {
                                 GPS[j] = "R";
                             }
                             System.out.println("KUL3");
-                        } else if (Math.abs(a - b) == 1 && c - b > 1) {
+                        } else if (Math.abs(a - b) == 1 && c - b > 1 && a != 14) {
                             //Vänster/höger sväng om riktning vågrätt
                             if (a - b == 1) {
                                 GPS[j] = "R";
@@ -201,6 +201,17 @@ public class OverordnatSystem {
                             System.out.println("KUL5");
                         } else if (a == 14 || b == 14 || c == 14) {
                             //ta hand om alla elaka bågar via nod 14...
+                            if (a == 16 && b == 15 && c == 14) {
+                                GPS[j] = "L";
+                            } else if (a == 6 && b == 14 && c == 15) {
+                                GPS[j] = "F";
+                            } else if (a == 14 && b == 15 && c == 16) {
+                                GPS[j] = "R";
+                            } else if (a == 14 && b == 15 && c == 23) {
+                                GPS[j] = "F";
+                            } else if (a == 23 && b == 15 && c == 14) {
+                                GPS[j] = "F";
+                            }
                             System.out.println("KUL2");
                         } else if (Math.abs(a - b) == 1 && Math.abs(b - c) == 1) {
                             //rakt fram vågrätt
