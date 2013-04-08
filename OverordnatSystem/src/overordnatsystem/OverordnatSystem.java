@@ -19,12 +19,13 @@ public class OverordnatSystem {
     OverordnatSystem() {
         ds = new DataStore();
         DataStore ds2 = new DataStore();
+        DataStore ds4 = new DataStore();
         ds3 = new DataStore();
 
-        ds.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Lagernatverk_20130213.csv");
-        ds2.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Orders_20130211.csv");
-        //ds.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Lagernatverk_20130213.csv");
-        //ds2.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
+        //ds.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Lagernatverk_20130213.csv");
+        //ds2.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Orders_20130211.csv");
+        ds.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Lagernatverk_20130213.csv");
+        ds2.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
 
         ds.readNet();
         ds2.readOrders();
@@ -36,11 +37,13 @@ public class OverordnatSystem {
 
         ds3.orders = ds2.orders;
         ds3.fileName = ds2.fileName;
+        ds4.orders = ds2.orders;
+        ds4.fileName = ds2.fileName;
 
         System.out.println("\n\n\n\n\n");
 
         int i = 0;
-        int k, l, m;
+        int k, l, m, diff = 0;
         l = 0;
         int[] numbers = new int[ds3.orders];
         while (i < ds3.orders) {
@@ -76,6 +79,59 @@ public class OverordnatSystem {
 
         LinkedList<Vertex> path;
 
+        for (i = 0; i < ds3.orders; i++) {
+            diff = 0;
+            int mindiff = 10000, nextnode = 0;
+            for (int j = 0; j < ds3.orders; j++) {
+                if (i == 0) {
+                    start = (int) ds.shelfNode[0];
+                    stop = (int) ds.shelfNode[ds3.orderStart[j]];
+                    if (start != stop) {
+                        path = op.createPlan(start, stop);
+                        for (int q = 0; q < path.size(); q++) {
+                            diff = (int) Math.max(Math.abs(ds.nodeY[start - 1] - ds.nodeY[stop - 1]), Math.abs(ds.nodeX[start - 1] - ds.nodeX[stop - 1]));
+                        }
+                        mindiff = Math.min(mindiff, diff);
+                        //System.out.println("ds3.orderEnd[j] " + ds3.orderEnd[j]);
+                        if (mindiff == diff) {
+                            nextnode = j;
+                            ds4.orderStart[i] = ds3.orderStart[j];
+                            ds4.orderEnd[i] = ds3.orderEnd[j];
+                            System.out.println("ds4.orderStart[i] " + ds4.orderStart[i]);
+                            System.out.println("ds4.orderEnd[i] " + ds4.orderEnd[i]);
+                        }
+                    }
+                } else {
+                    start = ds.shelfNode[ds4.orderEnd[i - 1]];
+                    stop = ds.shelfNode[ds3.orderEnd[j]];
+                    if (start != stop) {
+                        path = op.createPlan(start, stop);
+                        for (int q = 0; q < path.size(); q++) {
+                            diff = diff + (int) Math.max(Math.abs(ds.nodeY[start - 1] - ds.nodeY[stop - 1]), Math.abs(ds.nodeX[start - 1] - ds.nodeX[stop - 1]));
+                        }
+                        mindiff = Math.min(mindiff, diff);
+                        //System.out.println("ds3.orderEnd[j] " + ds3.orderEnd[j]);
+                        if (mindiff == diff) {
+                            nextnode = j;
+                            ds4.orderStart[i] = ds3.orderStart[j];
+                            ds4.orderEnd[i] = ds3.orderEnd[j];
+                            ds3.orderStart[j] = 0;
+                            ds3.orderEnd[j] = 0;
+                            System.out.println("ds4.orderStart[i] " + ds4.orderStart[i]);
+                            System.out.println("ds4.orderEnd[i] " + ds4.orderEnd[i]);
+                        }
+                    }
+                }
+            }
+            System.out.println("I " + i + " DIFF " + diff + " nextnode " + nextnode);
+        }
+
+        for(int j = 0;j < ds4.orders; j++){
+            System.out.println("ds4.orderStart[j] " + ds4.orderStart[j]);
+            System.out.println("ds4.orderEnd[j] " + ds4.orderEnd[j]);
+        }
+        
+        ds3 = ds4;
         for (i = 0; i < ds3.orders; i++) {
             if (ds3.orderStart[i] != ds3.orderEnd[i]) {
                 //System.out.println("ds3.orderStart[i] " + ds3.orderStart[i]);
@@ -235,62 +291,6 @@ public class OverordnatSystem {
                             System.out.println("KUL6");
                         }
                     }
-                    /*
-                     else {
-                     /* Det är något som strular... Ger felaktiga tecken för
-                     * fram/höger/vänster.
-                     * 24 -> 23 -> 15 -> 15 -> 14... L,L,R,A.. R är fel!
-                     * 16->15->14 ger rakt... INTE RÄTT!!!!
-                     * 
-                     * Rätt!
-                     * 17 -> 16 -> 8 -> 7
-                     * 32 -> 31 -> 25 -> 26 -> 18 -> 17
-                     *
-                     int a = Integer.parseInt(path.get(j).getId());
-                     int b = Integer.parseInt(path.get(j + 1).getId());
-                     int c = Integer.parseInt(path.get(j - 1).getId());
-                     if (a == 15 && b == 14 && c - a == 1) {
-                     GPS += "L";
-                     System.out.println("KUL33!!!");
-                     } else if (a == 15 && b == 14 && c - a > 1) {
-                     GPS += "F";
-                     System.out.println("KUL34!!!");
-                     } else if (Math.abs(a - b) == 1 && Math.abs(a - c) == 1) {
-                     GPS += "F";
-                     System.out.println("KUL13!!!");
-                     //System.out.println("GPS[j] " + GPS[j]);
-                     } else if (Math.abs(a - b) == 1 && Math.abs(a - c) > 1) {
-                     if (a - b == 1) {
-                     GPS += "R";
-                     System.out.println("KUL14!!!");
-                     //System.out.println("GPS[j] " + GPS[j]);
-                     } else if (b - a == 1) {
-                     GPS += "L";
-                     System.out.println("KUL15!!!");
-                     //System.out.println("GPS[j] " + GPS[j]);
-                     }
-                     } else if (a - b > 1 && Math.abs(a - c) == 1) {
-                     if (a - c == 1) {
-                     GPS += "R";
-                     System.out.println("KUL16!!!");
-                     //System.out.println("GPS[j] " + GPS[j]);
-                     } else if (c - a == 1) {
-                     GPS += "L";
-                     System.out.println("KUL17!!!");
-                     //System.out.println("GPS[j] " + GPS[j]);
-                     }
-                     } else if (b - a > 1 && Math.abs(a - c) == 1) {
-                     if (a - c == 1) {
-                     GPS += "L";
-                     System.out.println("KUL26!!!");
-                     //System.out.println("GPS[j] " + GPS[j]);
-                     } else if (c - a == 1) {
-                     GPS += "R";
-                     System.out.println("KUL27!!!");
-                     //System.out.println("GPS[j] " + GPS[j]);
-                     }
-                     }
-                     }*/
                 }
                 System.out.println("\n" + Arrays.toString(GPS));
             }
