@@ -15,6 +15,168 @@ public class OverordnatSystem {
 
     DataStore ds;
     DataStore ds3;
+//FIXA!!!!
+    public String GPSkoordinater(LinkedList<Vertex> path, int istart, int istop) {
+        String GPS = "";
+        for (int j = 0; j < path.size(); j++) {
+            System.out.println(path.get(j).getId());
+            if (j == 0) {
+                if (ds.shelfDirection[ds3.orderStart[istart]].equalsIgnoreCase("N")) {
+                    int a = Integer.parseInt(path.get(j).getId());
+                    int b = Integer.parseInt(path.get(j + 1).getId());
+                    if (a - b == 1) {
+                        GPS += "L";
+                        //System.out.println("KUL!!!");
+                        //System.out.println("GPS +" + GPS[j]);
+                    } else if (b - a == 1) {
+                        GPS += "R";
+                        //System.out.println("KUL2!!!");
+                        //System.out.println("GPS +" + GPS[j]);
+                    }
+                } else if (ds.shelfDirection[ds3.orderStart[istart]].equalsIgnoreCase("S")) {
+                    int a = Integer.parseInt(path.get(j).getId());
+                    int b = Integer.parseInt(path.get(j + 1).getId());
+                    if (a - b == 1) {
+                        GPS += "R";
+                        //System.out.println("KUL3!!!");
+                        //System.out.println("GPS +" + GPS[j]);
+                    } else if (b - a == 1) {
+                        GPS += "L";
+                        //System.out.println("KUL4!!!");
+                        //System.out.println("GPS +" + GPS[j]);
+                    }
+                    //System.out.println("Kul, kanske1");
+                } else if (ds.shelfDirection[ds3.orderStart[istart]].equalsIgnoreCase("V")) {
+                    int a = Integer.parseInt(path.get(j).getId());
+                    int b = Integer.parseInt(path.get(j + 1).getId());
+                    if (a - b == 8) {
+                        GPS += "L";
+                        //System.out.println("KUL5!!!");
+                        //System.out.println("GPS +" + GPS[j]);
+                    } else if (b - a == 1) {
+                        GPS += "R";
+                        //System.out.println("KUL6!!!");
+                        //System.out.println("GPS +" + GPS[j]);
+                    }
+                    //System.out.println("Kul, kanske2");
+                }
+            } else if (j == path.size() - 1) {
+                if (ds.shelfDirection[ds3.orderEnd[istop]].equalsIgnoreCase("N")) {
+                    int a = Integer.parseInt(path.get(j - 1).getId());
+                    int b = Integer.parseInt(path.get(j).getId());
+                    if (a - b == 1) {
+                        GPS += "A";
+                        //System.out.println("KUL7!!!");
+                        //System.out.println("GPS +" + GPS[j]);
+                    } else if (b - a == 1) {
+                        GPS += "B";
+                        //System.out.println("KUL8!!!");
+                        //System.out.println("GPS +" + GPS[j]);
+                    }
+                    //System.out.println("Kul, kanske3");
+                } else if (ds.shelfDirection[ds3.orderEnd[istop]].equalsIgnoreCase("S")) {
+                    int a = Integer.parseInt(path.get(j - 1).getId());
+                    int b = Integer.parseInt(path.get(j).getId());
+                    if (a - b == 1) {
+                        GPS += "B";
+                        //System.out.println("KUL9!!!");
+                        //System.out.println("GPS +" + GPS[j]);
+                    } else if (b - a == 1) {
+                        GPS += "A";
+                        //System.out.println("KUL10!!!");
+                        //System.out.println("GPS +" + GPS[j]);
+                    }
+                    //System.out.println("Kul, kanske4");
+                } else if (ds.shelfDirection[ds3.orderEnd[istop]].equalsIgnoreCase("V")) {
+                    int a = Integer.parseInt(path.get(j - 1).getId());
+                    int b = Integer.parseInt(path.get(j).getId());
+                    if (a - b == 1) {
+                        GPS += "A";
+                        //System.out.println("KUL11!!!");
+                        //System.out.println("GPS +" + GPS[j]);
+                    } else if (b - a == 8) {
+                        GPS += "B";
+                        //System.out.println("KUL12!!!");
+                        //System.out.println("GPS +" + GPS[j]);
+                    }
+                    //System.out.println("Kul, kanske5");
+                }
+            } else {
+                int a = Integer.parseInt(path.get(j - 1).getId());
+                int b = Integer.parseInt(path.get(j).getId());
+                int c = Integer.parseInt(path.get(j + 1).getId());
+                //System.out.println("FUUUU");
+                //System.out.println("A " + a);
+                //System.out.println("B " + b);
+                //System.out.println("C " + c);
+
+                if (Math.abs(a - b) > 1 && Math.abs(b - c) > 1) {
+                    //rakt fram lodrätt
+                    GPS += "F";
+                    System.out.println("KUL");
+                } else if (a - b > 1 && Math.abs(c - b) == 1 && b != 15) {
+                    //Vänster/höger sväng om riktning norr -> söder
+                    if (c - b == 1) {
+                        GPS += "L";
+                    } else if (b - c == 1) {
+                        GPS += "R";
+                    }
+                    System.out.println("KUL3");
+                } else if (b - a > 1 && Math.abs(c - b) == 1 && b != 15) {
+                    //Vänster/höger sväng om riktning norr -> söder
+                    if (c - b == 1) {
+                        GPS += "R";
+                    } else if (b - c == 1) {
+                        GPS += "L";
+                    }
+                    System.out.println("KUL3");
+                } else if (Math.abs(a - b) == 1 && c - b > 1 && a != 14) {
+                    //Vänster/höger sväng om riktning vågrätt
+                    if (a - b == 1) {
+                        GPS += "R";
+                    } else if (b - a == 1) {
+                        GPS += "L";
+                    }
+                    System.out.println("KUL5");
+                } else if (a == 14 || b == 14 || c == 14) {
+                    //ta hand om alla elaka bågar via nod 14...
+                    if (a == 16 && b == 15 && c == 14) {
+                        GPS += "L";
+                    } else if (a == 6 && b == 14 && c == 15) {
+                        GPS += "F";
+                    } else if (a == 14 && b == 15 && c == 16) {
+                        GPS += "R";
+                    } else if (a == 14 && b == 15 && c == 23) {
+                        GPS += "F";
+                    } else if (a == 23 && b == 15 && c == 14) {
+                        GPS += "F";
+                    }
+                    System.out.println("KUL2");
+                } else if (Math.abs(a - b) == 1 && Math.abs(b - c) == 1) {
+                    //rakt fram vågrätt
+                    GPS += "F";
+                    System.out.println("KUL4");
+                } else if (Math.abs(a - b) == 1 && b - c > 1) {
+                    //Vänster/höger sväng om riktning vågrätt
+                    if (a - b == 1) {
+                        GPS += "L";
+                    } else if (b - a == 1) {
+                        GPS += "R";
+                    }
+                    System.out.println("KUL7");
+                } else if (Math.abs(a - b) > 1 && c - b == 1) {
+                    //Vänster/höger sväng om riktning vågrätt
+                    if (a - b > 1) {
+                        GPS += "L";
+                    } else if (b - a > 1) {
+                        GPS += "R";
+                    }
+                    System.out.println("KUL6");
+                }
+            }
+        }
+        return GPS;
+    }
 
     OverordnatSystem() {
         ds = new DataStore();
@@ -182,168 +344,12 @@ public class OverordnatSystem {
                 //System.out.println("Stop " + stop);
 
                 //System.out.println("ds.shelfDirection[ds3.orderStart[i]] " + ds.shelfDirection[ds3.orderStart[i]]);
+                GPS = this.GPSkoordinater(path, i, i);
 
-                for (int j = 0; j < path.size(); j++) {
-                    System.out.println(path.get(j).getId());
-                    if (j == 0) {
-                        if (ds.shelfDirection[ds3.orderStart[i]].equalsIgnoreCase("N")) {
-                            int a = Integer.parseInt(path.get(j).getId());
-                            int b = Integer.parseInt(path.get(j + 1).getId());
-                            if (a - b == 1) {
-                                GPS += "L";
-                                //System.out.println("KUL!!!");
-                                //System.out.println("GPS +" + GPS[j]);
-                            } else if (b - a == 1) {
-                                GPS += "R";
-                                //System.out.println("KUL2!!!");
-                                //System.out.println("GPS +" + GPS[j]);
-                            }
-                        } else if (ds.shelfDirection[ds3.orderStart[i]].equalsIgnoreCase("S")) {
-                            int a = Integer.parseInt(path.get(j).getId());
-                            int b = Integer.parseInt(path.get(j + 1).getId());
-                            if (a - b == 1) {
-                                GPS += "R";
-                                //System.out.println("KUL3!!!");
-                                //System.out.println("GPS +" + GPS[j]);
-                            } else if (b - a == 1) {
-                                GPS += "L";
-                                //System.out.println("KUL4!!!");
-                                //System.out.println("GPS +" + GPS[j]);
-                            }
-                            //System.out.println("Kul, kanske1");
-                        } else if (ds.shelfDirection[ds3.orderStart[i]].equalsIgnoreCase("V")) {
-                            int a = Integer.parseInt(path.get(j).getId());
-                            int b = Integer.parseInt(path.get(j + 1).getId());
-                            if (a - b == 8) {
-                                GPS += "L";
-                                //System.out.println("KUL5!!!");
-                                //System.out.println("GPS +" + GPS[j]);
-                            } else if (b - a == 1) {
-                                GPS += "R";
-                                //System.out.println("KUL6!!!");
-                                //System.out.println("GPS +" + GPS[j]);
-                            }
-                            //System.out.println("Kul, kanske2");
-                        }
-                    } else if (j == path.size() - 1) {
-                        if (ds.shelfDirection[ds3.orderEnd[i]].equalsIgnoreCase("N")) {
-                            int a = Integer.parseInt(path.get(j - 1).getId());
-                            int b = Integer.parseInt(path.get(j).getId());
-                            if (a - b == 1) {
-                                GPS += "A";
-                                //System.out.println("KUL7!!!");
-                                //System.out.println("GPS +" + GPS[j]);
-                            } else if (b - a == 1) {
-                                GPS += "B";
-                                //System.out.println("KUL8!!!");
-                                //System.out.println("GPS +" + GPS[j]);
-                            }
-                            //System.out.println("Kul, kanske3");
-                        } else if (ds.shelfDirection[ds3.orderEnd[i]].equalsIgnoreCase("S")) {
-                            int a = Integer.parseInt(path.get(j - 1).getId());
-                            int b = Integer.parseInt(path.get(j).getId());
-                            if (a - b == 1) {
-                                GPS += "B";
-                                //System.out.println("KUL9!!!");
-                                //System.out.println("GPS +" + GPS[j]);
-                            } else if (b - a == 1) {
-                                GPS += "A";
-                                //System.out.println("KUL10!!!");
-                                //System.out.println("GPS +" + GPS[j]);
-                            }
-                            //System.out.println("Kul, kanske4");
-                        } else if (ds.shelfDirection[ds3.orderEnd[i]].equalsIgnoreCase("V")) {
-                            int a = Integer.parseInt(path.get(j - 1).getId());
-                            int b = Integer.parseInt(path.get(j).getId());
-                            if (a - b == 1) {
-                                GPS += "A";
-                                //System.out.println("KUL11!!!");
-                                //System.out.println("GPS +" + GPS[j]);
-                            } else if (b - a == 8) {
-                                GPS += "B";
-                                //System.out.println("KUL12!!!");
-                                //System.out.println("GPS +" + GPS[j]);
-                            }
-                            //System.out.println("Kul, kanske5");
-                        }
-                    } else {
-                        int a = Integer.parseInt(path.get(j - 1).getId());
-                        int b = Integer.parseInt(path.get(j).getId());
-                        int c = Integer.parseInt(path.get(j + 1).getId());
-                        //System.out.println("FUUUU");
-                        //System.out.println("A " + a);
-                        //System.out.println("B " + b);
-                        //System.out.println("C " + c);
-
-                        if (Math.abs(a - b) > 1 && Math.abs(b - c) > 1) {
-                            //rakt fram lodrätt
-                            GPS += "F";
-                            System.out.println("KUL");
-                        } else if (a - b > 1 && Math.abs(c - b) == 1 && b != 15) {
-                            //Vänster/höger sväng om riktning norr -> söder
-                            if (c - b == 1) {
-                                GPS += "L";
-                            } else if (b - c == 1) {
-                                GPS += "R";
-                            }
-                            System.out.println("KUL3");
-                        } else if (b - a > 1 && Math.abs(c - b) == 1 && b != 15) {
-                            //Vänster/höger sväng om riktning norr -> söder
-                            if (c - b == 1) {
-                                GPS += "R";
-                            } else if (b - c == 1) {
-                                GPS += "L";
-                            }
-                            System.out.println("KUL3");
-                        } else if (Math.abs(a - b) == 1 && c - b > 1 && a != 14) {
-                            //Vänster/höger sväng om riktning vågrätt
-                            if (a - b == 1) {
-                                GPS += "R";
-                            } else if (b - a == 1) {
-                                GPS += "L";
-                            }
-                            System.out.println("KUL5");
-                        } else if (a == 14 || b == 14 || c == 14) {
-                            //ta hand om alla elaka bågar via nod 14...
-                            if (a == 16 && b == 15 && c == 14) {
-                                GPS += "L";
-                            } else if (a == 6 && b == 14 && c == 15) {
-                                GPS += "F";
-                            } else if (a == 14 && b == 15 && c == 16) {
-                                GPS += "R";
-                            } else if (a == 14 && b == 15 && c == 23) {
-                                GPS += "F";
-                            } else if (a == 23 && b == 15 && c == 14) {
-                                GPS += "F";
-                            }
-                            System.out.println("KUL2");
-                        } else if (Math.abs(a - b) == 1 && Math.abs(b - c) == 1) {
-                            //rakt fram vågrätt
-                            GPS += "F";
-                            System.out.println("KUL4");
-                        } else if (Math.abs(a - b) == 1 && b - c > 1) {
-                            //Vänster/höger sväng om riktning vågrätt
-                            if (a - b == 1) {
-                                GPS += "L";
-                            } else if (b - a == 1) {
-                                GPS += "R";
-                            }
-                            System.out.println("KUL7");
-                        } else if (Math.abs(a - b) > 1 && c - b == 1) {
-                            //Vänster/höger sväng om riktning vågrätt
-                            if (a - b > 1) {
-                                GPS += "L";
-                            } else if (b - a > 1) {
-                                GPS += "R";
-                            }
-                            System.out.println("KUL6");
-                        }
-                    }
-                }
             } else if (start == stop && start == 24) {
                 GPS += "J";
             }
-            System.out.println("\n" +GPS);
+            System.out.println("\n" + GPS);
             System.out.println("\n GPS.längd " + GPS.length());
         }
     }
