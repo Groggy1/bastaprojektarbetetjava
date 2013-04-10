@@ -15,7 +15,7 @@ public class OverordnatSystem {
 
     DataStore ds;
     DataStore ds3;
-//FIXA!!!!
+
     public String GPSkoordinater(LinkedList<Vertex> path, int istart, int istop) {
         String GPS = "";
         for (int j = 0; j < path.size(); j++) {
@@ -331,9 +331,15 @@ public class OverordnatSystem {
 
         String GPS;
         for (i = 0; i < ds3.orders; i++) {
+            //Förflyttning mellan ordrar
             GPS = "";
-            start = (int) ds.shelfNode[ds3.orderStart[i]];
-            stop = (int) ds.shelfNode[ds3.orderEnd[i]];
+            if (i == 0) {
+                start = ds.shelfNode[0];
+                stop = (int) ds.shelfNode[ds3.orderStart[i]];
+            } else {
+                start = (int) ds.shelfNode[ds3.orderEnd[i - 1]];
+                stop = (int) ds.shelfNode[ds3.orderStart[i]];
+            }
             if (start != stop) {
                 //System.out.println("i " + i);
                 //System.out.println("ds3.orderStart[i] " + ds3.orderStart[i]);
@@ -345,12 +351,24 @@ public class OverordnatSystem {
 
                 //System.out.println("ds.shelfDirection[ds3.orderStart[i]] " + ds.shelfDirection[ds3.orderStart[i]]);
                 GPS = this.GPSkoordinater(path, i, i);
-
             } else if (start == stop && start == 24) {
                 GPS += "J";
             }
-            System.out.println("\n" + GPS);
-            System.out.println("\n GPS.längd " + GPS.length());
+            System.out.println("\nGPS:" + GPS);
+            System.out.println("GPS.längd " + GPS.length() + "\n");
+
+            //Räkna ut förflyttning av LÅDA!
+            GPS = "";
+            start = (int) ds.shelfNode[ds3.orderStart[i]];
+            stop = (int) ds.shelfNode[ds3.orderEnd[i]];
+            if (start != stop) {
+                path = op.createPlan(start, stop);
+                GPS = this.GPSkoordinater(path, i, i);
+            } else if (start == stop && start == 24) {
+                GPS += "J";
+            }
+            System.out.println("\nGPS:" + GPS);
+            System.out.println("GPS.längd " + GPS.length() + "\n");
         }
     }
 
