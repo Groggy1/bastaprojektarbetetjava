@@ -4,8 +4,13 @@
  */
 package overordnatsystem;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.LinkedList;
+import javax.microedition.io.Connector;
+import javax.microedition.io.StreamConnection;
 
 /**
  *
@@ -179,226 +184,229 @@ public class OverordnatSystem {
         return GPS;
     }
 
+    public String bluetoothkom(BufferedReader bluetooth_in) {
+        String meddelande_ut = "";
+        try {
+            String meddelande_in = bluetooth_in.readLine();
+
+            String O = "" + meddelande_in.charAt(0);
+            String U = meddelande_in.substring(1);
+
+            if (meddelande_in.equalsIgnoreCase("C")) {
+                System.out.println("Jag har fått ack");
+                System.out.println("Jag ska vänta 5000ms");
+                Thread.sleep(5000);
+                System.out.println("Jag har väntat");
+
+                meddelande_in = bluetooth_in.readLine();
+
+
+                if (meddelande_in.equalsIgnoreCase("y")) {
+                    System.out.println("klar");
+                    System.out.println("kalla på opti");
+                    meddelande_ut = "start";
+                } else if (meddelande_in.equalsIgnoreCase("n")) {
+                    System.out.println("Jag är LITHe vilse");
+                    meddelande_ut = "start";
+
+                } else if (meddelande_in.equalsIgnoreCase("e")) {
+                    System.out.println("Skicka om");
+                    meddelande_ut = "start";
+                }
+            } else if (O.equalsIgnoreCase("D")) {
+                System.out.println("Distansen är: " + U + "cm");
+            } else if (meddelande_in.equalsIgnoreCase("e")) {
+                System.out.println("Skicka om");
+                meddelande_ut = "start";
+            }
+        } catch (Exception e) {
+            System.out.print(e.toString());
+        }
+        return meddelande_ut;
+    }
+
     OverordnatSystem() {
-        ds = new DataStore();
-        DataStore ds2 = new DataStore();
-        DataStore ds4 = new DataStore();
-        ds3 = new DataStore();
+        try {
+            StreamConnection anslutning = (StreamConnection) Connector.open("btspp://F07BCBF04304:8");
+            PrintStream bluetooth_ut = new PrintStream(anslutning.openOutputStream());
+// F07BCBF04304:8 testdator
+            BufferedReader bluetooth_in = new BufferedReader(new InputStreamReader(anslutning.openInputStream()));
 
-        //ds.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Lagernatverk_20130213.csv");
-        //ds2.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Orders_20130211.csv");
-        ds.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Lagernatverk_20130213.csv");
+            BufferedReader tangentbord = new BufferedReader(new InputStreamReader(System.in));
 
-        ds.readNet();
-        ds.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
-        ds.readOrders();
-        ds2.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
-        ds2.readOrders();
+            String meddelande_ut = "start";
 
-        cui = new ControlUI(ds);
-        cui.setVisible(true);
-        cui.showStatus();
+            ds = new DataStore();
+            DataStore ds2 = new DataStore();
+            DataStore ds4 = new DataStore();
+            ds3 = new DataStore();
 
-        GuiUpdate g1 = new GuiUpdate(ds, cui);
-        Thread t2 = new Thread(g1);
-        t2.start();
-        /*
-         System.out.println(ds2.orderStart[0] + " orderstart");
-         System.out.println(ds2.orderEnd[0] + " orderEnd");
-         */
+            //ds.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Lagernatverk_20130213.csv");
+            //ds2.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Orders_20130211.csv");
+            //ds.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Lagernatverk_20130213.csv");
+            //ds.readNet();
+            //ds.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
+            //ds.readOrders();
+            //ds2.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
+            //ds2.readOrders();
 
-        ds3.orders = ds2.orders;
-        ds3.fileName = ds2.fileName;
-        ds4.orders = ds2.orders;
-        ds4.fileName = ds2.fileName;
+            ds.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Lagernatverk_20130213.csv");
+            ds.readNet();
+            ds.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
+            ds.readOrders();
+            ds2.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
+            ds2.readOrders();
 
-        System.out.println("\n\n\n\n\n");
+            cui = new ControlUI(ds);
+            cui.setVisible(true);
+            cui.showStatus();
 
-        int i = 0;
-        int k, l, m, diff = 0;
-        l = 0;
-        int[] numbers = new int[ds3.orders];
-        while (i < ds3.orders) {
-            k = 0;
-            m = 0;
-            int pppp = 0;
-            for (int j = i; j < ds3.orders; j++) {
-                if (ds2.orderStart[j] == ds2.orderEnd[i] && i != j) {
-                    System.out.println("heej!");
-                    ds3.orderStart[j] = ds2.orderStart[i];
-                    ds3.orderEnd[j] = ds2.orderEnd[j];
-                    System.out.println("ds3.orderStart[j]\t" + ds3.orderStart[j]);
-                    System.out.println("ds3.orderEnd[j]\t\t" + ds3.orderEnd[j]);
-                    ds2.orderStart[j] = -1;
-                    ds2.orderEnd[j] = -1;
-                    numbers[l] = j;
-                    l++;
-                    k++;
-                    pppp++;
-                    break;
+            GuiUpdate g1 = new GuiUpdate(ds, cui);
+            Thread t2 = new Thread(g1);
+            t2.start();
+
+            ds3.orders = ds2.orders;
+            ds3.fileName = ds2.fileName;
+            ds4.orders = ds2.orders;
+            ds4.fileName = ds2.fileName;
+
+            System.out.println("\n\n\n\n\n");
+
+            int i = 0;
+            int k, l, m, diff = 0;
+            l = 0;
+            int[] numbers = new int[ds3.orders];
+            while (i < ds3.orders) {
+                k = 0;
+                m = 0;
+                int pppp = 0;
+                for (int j = i; j < ds3.orders; j++) {
+                    if (ds2.orderStart[j] == ds2.orderEnd[i] && i != j) {
+                        System.out.println("heej!");
+                        ds3.orderStart[j] = ds2.orderStart[i];
+                        ds3.orderEnd[j] = ds2.orderEnd[j];
+                        System.out.println("ds3.orderStart[j]\t" + ds3.orderStart[j]);
+                        System.out.println("ds3.orderEnd[j]\t\t" + ds3.orderEnd[j]);
+                        ds2.orderStart[j] = -1;
+                        ds2.orderEnd[j] = -1;
+                        numbers[l] = j;
+                        l++;
+                        k++;
+                        pppp++;
+                        break;
+                    }
                 }
-            }
-            for (int n = 0; n < l; n++) {
-                if (numbers[n] == i) {
-                    m++;
+                for (int n = 0; n < l; n++) {
+                    if (numbers[n] == i) {
+                        m++;
+                    }
                 }
+                if (k == 0 && m == 0) {
+                    System.out.println("heej2!");
+                    ds3.orderStart[i] = ds2.orderStart[i];
+                    ds3.orderEnd[i] = ds2.orderEnd[i];
+                    System.out.println("ds3.orderStart[j]\t" + ds3.orderStart[i]);
+                    System.out.println("ds3.orderEnd[j]\t\t" + ds3.orderEnd[i]);
+                    ds2.orderStart[i] = -1;
+                    ds2.orderEnd[i] = -1;
+                } else if (pppp != 0) {
+                    ds3.orderStart[i] = 0;
+                    ds3.orderEnd[i] = 0;
+                }
+                i++;
             }
-            if (k == 0 && m == 0) {
-                System.out.println("heej2!");
-                ds3.orderStart[i] = ds2.orderStart[i];
-                ds3.orderEnd[i] = ds2.orderEnd[i];
-                System.out.println("ds3.orderStart[j]\t" + ds3.orderStart[i]);
-                System.out.println("ds3.orderEnd[j]\t\t" + ds3.orderEnd[i]);
-                ds2.orderStart[i] = -1;
-                ds2.orderEnd[i] = -1;
-            } else if (pppp != 0) {
-                ds3.orderStart[i] = 0;
-                ds3.orderEnd[i] = 0;
+
+            System.out.println("\n\n");
+            int start;
+            int stop;
+            OptPlan op = new OptPlan(ds);
+
+            LinkedList<Vertex> path;
+
+            for (int j = 0; j < ds3.orders; j++) {
+                System.out.println("ds3.orderStart[j]\t" + ds3.orderStart[j]);
+                System.out.println("ds3.orderEnd[j]\t\t" + ds3.orderEnd[j]);
+                System.out.println("");
             }
-            //System.out.println("i " + i + "\nStart: " + ds3.orderStart[i] + "\nStop: " + ds3.orderEnd[i] + "\n");
-            i++;
-        }
 
-        System.out.println("\n\n");
-        int start;
-        int stop;
-        OptPlan op = new OptPlan(ds);
+            System.out.println("\n\n");
 
-        LinkedList<Vertex> path;
+            String GPS;
+            for (i = 0; i < ds3.orders; i++) {
+                //Förflyttning mellan ordrar
+                GPS = "";
+                if (i == 0) {
+                    start = ds.shelfNode[0];
+                    stop = (int) ds.shelfNode[ds3.orderStart[i]];
+                } else {
+                    start = (int) ds.shelfNode[ds3.orderEnd[i - 1]];
+                    stop = (int) ds.shelfNode[ds3.orderStart[i]];
+                }
+                if (start != stop) {
+                    path = op.createPlan(start, stop);
+                    GPS = this.GPSkoordinater(path, i, i);
+                } else if (start == stop && start == 24) {
+                    GPS += "J";
+                }
+                System.out.println("\nGPS:" + GPS);
+                System.out.println("GPS.längd " + GPS.length() + "\n");
 
-        /*
-         for (i = 0; i < ds3.orders; i++) {
-         diff = 0;
-         int mindiff = 10000, nextnode = 0;
-         for (int j = 0; j < ds3.orders; j++) {
-         if (i == 0) {
-         start = (int) ds.shelfNode[0];
-         stop = (int) ds.shelfNode[ds3.orderStart[j]];
-         if (start != stop) {
-         path = op.createPlan(start, stop);
-         for (int q = 0; q < path.size(); q++) {
-         diff = (int) Math.max(Math.abs(ds.nodeY[start - 1] - ds.nodeY[stop - 1]), Math.abs(ds.nodeX[start - 1] - ds.nodeX[stop - 1]));
-         }
-         mindiff = Math.min(mindiff, diff);
-         //System.out.println("ds3.orderEnd +" + ds3.orderEnd[j]);
-         if (mindiff == diff) {
-         nextnode = j;
-         ds4.orderStart[i] = ds3.orderStart[j];
-         ds4.orderEnd[i] = ds3.orderEnd[j];
-         //System.out.println("ds4.orderStart[i] " + ds4.orderStart[i]);
-         //System.out.println("ds4.orderEnd[i] " + ds4.orderEnd[i]);
-         }
-         }
-         } else {
-         start = ds.shelfNode[ds4.orderEnd[i - 1]];
-         stop = ds.shelfNode[ds3.orderEnd[j]];
-         if (start != stop) {
-         path = op.createPlan(start, stop);
-         for (int q = 0; q < path.size(); q++) {
-         diff = diff + (int) Math.max(Math.abs(ds.nodeY[start - 1] - ds.nodeY[stop - 1]), Math.abs(ds.nodeX[start - 1] - ds.nodeX[stop - 1]));
-         }
+                //Om ingen längd på GPS-koordinaterna ges behöver ingenting skickas till roboten
+                if (GPS.length() > 0) {
+                    if (meddelande_ut.equalsIgnoreCase("start")) {
+                        meddelande_ut = GPS;
+                        meddelande_ut = "x" + meddelande_ut + "z";
+                        bluetooth_ut.println(meddelande_ut);
+                    }
+                    meddelande_ut = this.bluetoothkom(bluetooth_in);
 
-         int www = 0;
-         for (int qqq = 0; qqq < i; qqq++) {
-         if (ds4.orderStart[qqq] == stop) {
-         www++;
-         }
-         }
-         mindiff = Math.min(mindiff, diff);
-         //System.out.println("ds3.orderEnd +" + ds3.orderEnd[j]);
-         if (mindiff == diff) {
-         nextnode = j;
-         ds4.orderStart[i] = ds3.orderStart[j];
-         ds4.orderEnd[i] = ds3.orderEnd[j];
-         ds3.orderStart += 0;
-         ds3.orderEnd += 0;
-         //System.out.println("ds4.orderStart[i] " + ds4.orderStart[i]);
-         //System.out.println("ds4.orderEnd[i] " + ds4.orderEnd[i]);
-         }
-         }
-         }
-         }
-         //System.out.println("I " + i + " DIFF " + diff + " nextnode " + nextnode);
-         }
+                    ds.robotX = ds.nodeX[start - 1];
+                    ds.robotY = ds.nodeY[start - 1];
+                    cui.repaint();
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ex) {
+                        System.out.println("Fel");
+                    }
+                }
+                Arrays.fill(ds.arcColor, 0);
 
-         for (int j = 0; j < ds4.orders; j++) {
-         System.out.println("ds4.orderStart +" + ds4.orderStart[j]);
-         System.out.println("ds4.orderEnd +" + ds4.orderEnd[j]);
-         }
+                //Räkna ut förflyttning av LÅDA!
+                GPS = "";
+                start = (int) ds.shelfNode[ds3.orderStart[i]];
+                stop = (int) ds.shelfNode[ds3.orderEnd[i]];
 
-         System.out.println("\n\n");
+                if (start != stop) {
+                    path = op.createPlan(start, stop);
+                    GPS = this.GPSkoordinater(path, i, i);
+                } else if (start == stop && start == 24) {
+                    GPS += "J";
+                }
+                System.out.println("\nGPS:" + GPS);
+                System.out.println("GPS.längd " + GPS.length() + "\n");
 
-         ds3 = ds4;
-         */
+                //Om ingen längd på GPS-koordinaterna ges behöver ingenting skickas till roboten
+                if (GPS.length() > 0) {
+                    if (meddelande_ut.equalsIgnoreCase("start")) {
+                        meddelande_ut = GPS;
+                        meddelande_ut = "x" + meddelande_ut + "z";
+                        bluetooth_ut.println(meddelande_ut);
+                    }
+                    meddelande_ut = this.bluetoothkom(bluetooth_in);
 
-        for (int j = 0; j < ds3.orders; j++) {
-            System.out.println("ds3.orderStart[j]\t" + ds3.orderStart[j]);
-            System.out.println("ds3.orderEnd[j]\t\t" + ds3.orderEnd[j]);
-            System.out.println("");
-        }
-
-        System.out.println("\n\n");
-
-        String GPS;
-        for (i = 0; i < ds3.orders; i++) {
-            //Förflyttning mellan ordrar
-            GPS = "";
-            if (i == 0) {
-                start = ds.shelfNode[0];
-                stop = (int) ds.shelfNode[ds3.orderStart[i]];
-            } else {
-                start = (int) ds.shelfNode[ds3.orderEnd[i - 1]];
-                stop = (int) ds.shelfNode[ds3.orderStart[i]];
+                    ds.robotX = ds.nodeX[start - 1];
+                    ds.robotY = ds.nodeY[start - 1];
+                    cui.repaint();
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ex) {
+                        System.out.println("Fel");
+                    }
+                }
+                Arrays.fill(ds.arcColor, 0);
             }
-            if (start != stop) {
-                //System.out.println("i " + i);
-                //System.out.println("ds3.orderStart[i] " + ds3.orderStart[i]);
-                //System.out.println("ds.shelfNode[ds3.orderEnd[i]] " + ds.shelfNode[ds3.orderEnd[i]]);
-                path = op.createPlan(start, stop);
-
-                //System.out.println("Start " + start);
-                //System.out.println("Stop " + stop);
-
-                //System.out.println("ds.shelfDirection[ds3.orderStart[i]] " + ds.shelfDirection[ds3.orderStart[i]]);
-                GPS = this.GPSkoordinater(path, i, i);
-            } else if (start == stop && start == 24) {
-                GPS += "J";
-            }
-            System.out.println("\nGPS:" + GPS);
-            System.out.println("GPS.längd " + GPS.length() + "\n");
-
-            ds.robotX = ds.nodeX[start - 1];
-            ds.robotY = ds.nodeY[start - 1];
-            cui.repaint();
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ex) {
-                System.out.println("Fel");
-            }
-            Arrays.fill(ds.arcColor,0);
-
-            //Räkna ut förflyttning av LÅDA!
-            GPS = "";
-            start = (int) ds.shelfNode[ds3.orderStart[i]];
-            stop = (int) ds.shelfNode[ds3.orderEnd[i]];
-
-            if (start != stop) {
-                path = op.createPlan(start, stop);
-                GPS = this.GPSkoordinater(path, i, i);
-            } else if (start == stop && start == 24) {
-                GPS += "J";
-            }
-            System.out.println("\nGPS:" + GPS);
-            System.out.println("GPS.längd " + GPS.length() + "\n");
-            ds.robotX = ds.nodeX[start - 1];
-            ds.robotY = ds.nodeY[start - 1];
-            cui.repaint();
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ex) {
-                System.out.println("Fel");
-            }
-            Arrays.fill(ds.arcColor,0);
+        } catch (Exception e) {
+            System.out.print(e.toString());
         }
     }
 
