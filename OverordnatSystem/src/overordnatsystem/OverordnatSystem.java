@@ -15,6 +15,7 @@ public class OverordnatSystem {
 
     DataStore ds;
     DataStore ds3;
+    ControlUI cui;
 
     public String GPSkoordinater(LinkedList<Vertex> path, int istart, int istop) {
         String GPS = "";
@@ -187,11 +188,20 @@ public class OverordnatSystem {
         //ds.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Lagernatverk_20130213.csv");
         //ds2.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Orders_20130211.csv");
         ds.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Lagernatverk_20130213.csv");
-        ds2.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
 
         ds.readNet();
+        ds.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
+        ds.readOrders();
+        ds2.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
         ds2.readOrders();
 
+        cui = new ControlUI(ds);
+        cui.setVisible(true);
+        cui.showStatus();
+
+        GuiUpdate g1 = new GuiUpdate(ds, cui);
+        Thread t2 = new Thread(g1);
+        t2.start();
         /*
          System.out.println(ds2.orderStart[0] + " orderstart");
          System.out.println(ds2.orderEnd[0] + " orderEnd");
@@ -357,10 +367,21 @@ public class OverordnatSystem {
             System.out.println("\nGPS:" + GPS);
             System.out.println("GPS.längd " + GPS.length() + "\n");
 
+            ds.robotX = ds.nodeX[start - 1];
+            ds.robotY = ds.nodeY[start - 1];
+            cui.repaint();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                System.out.println("Fel");
+            }
+            Arrays.fill(ds.arcColor,0);
+
             //Räkna ut förflyttning av LÅDA!
             GPS = "";
             start = (int) ds.shelfNode[ds3.orderStart[i]];
             stop = (int) ds.shelfNode[ds3.orderEnd[i]];
+
             if (start != stop) {
                 path = op.createPlan(start, stop);
                 GPS = this.GPSkoordinater(path, i, i);
@@ -369,6 +390,15 @@ public class OverordnatSystem {
             }
             System.out.println("\nGPS:" + GPS);
             System.out.println("GPS.längd " + GPS.length() + "\n");
+            ds.robotX = ds.nodeX[start - 1];
+            ds.robotY = ds.nodeY[start - 1];
+            cui.repaint();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                System.out.println("Fel");
+            }
+            Arrays.fill(ds.arcColor,0);
         }
     }
 

@@ -27,6 +27,9 @@ public class DataStore {
     int[] shelfNode = new int[20];
     String[] shelfDirection = new String[20];
     int[] arcColor = new int[1000];
+    boolean updateUIflag = false;
+    double robotX;
+    double robotY;
 
     public DataStore() {
         // Initialize the datastore with fixed size arrays for storing the network data
