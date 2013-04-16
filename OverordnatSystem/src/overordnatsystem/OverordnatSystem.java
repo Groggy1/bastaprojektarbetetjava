@@ -18,17 +18,19 @@ public class OverordnatSystem {
 
     public String GPSkoordinater(LinkedList<Vertex> path, int istart, int istop) {
         String GPS = "";
+        System.out.println("start " + istart + "stop " + istop + " ds.shelfDirection[ds3.orderStart[istart]] " + ds.shelfDirection[ds3.orderStart[istart]]);
         for (int j = 0; j < path.size(); j++) {
+            System.out.println(path.get(j).getId());
             boolean startnod14a = true;
             boolean startnod14b = true;
             if (j < path.size() - 1) {
-                System.out.println("path.get(j).getId() " + path.get(j).getId());
-                System.out.println("path.get(j+1).getId() " + path.get(j + 1).getId());
-                if (Integer.parseInt(path.get(j).getId()) == 14 && Integer.parseInt(path.get(j+1).getId()) == 15 && !ds.startnod14anvand) {
+                //System.out.println("path.get(j).getId() " + path.get(j).getId());
+                //System.out.println("path.get(j+1).getId() " + path.get(j + 1).getId());
+                if (Integer.parseInt(path.get(j).getId()) == 14 && Integer.parseInt(path.get(j + 1).getId()) == 15 && !ds.startnod14anvand) {
                     System.out.println("hej");
                     startnod14a = false;
                     ds.startnod14anvand = true;
-                } else if (Integer.parseInt(path.get(j).getId()) == 14 && Integer.parseInt(path.get(j+1).getId()) == 6 && !ds.startnod14anvand){
+                } else if (Integer.parseInt(path.get(j).getId()) == 14 && Integer.parseInt(path.get(j + 1).getId()) == 6 && !ds.startnod14anvand) {
                     startnod14b = false;
                     ds.startnod14anvand = true;
                 }
@@ -37,7 +39,11 @@ public class OverordnatSystem {
                 if (ds.shelfDirection[ds3.orderStart[istart]].equalsIgnoreCase("N")) {
                     int a = Integer.parseInt(path.get(j).getId());
                     int b = Integer.parseInt(path.get(j + 1).getId());
-                    if (a - b == 1) {
+                    if (a == 19 && b == 20) {
+                        GPS += "L";
+                    } else if (a == 19 && b == 18) {
+                        GPS += "R";
+                    } else if (a - b == 1) {
                         GPS += "L";
                         //System.out.println("KUL!!!");
                         //System.out.println("GPS +" + GPS[j]);
@@ -131,15 +137,15 @@ public class OverordnatSystem {
                     //rakt fram lodrätt
                     GPS += "F";
                     System.out.println("KUL");
-                } else if (a - b > 1 && Math.abs(c - b) == 1 && b != 15) {
+                } else if (a - b > 1 && Math.abs(c - b) == 1 && b != 15 && b != 14) {
                     //Vänster/höger sväng om riktning norr -> söder
                     if (c - b == 1) {
                         GPS += "L";
                     } else if (b - c == 1) {
                         GPS += "R";
                     }
-                    System.out.println("KUL3");
-                } else if (b - a > 1 && Math.abs(c - b) == 1 && b != 15) {
+                    System.out.println("KUL43");
+                } else if (b - a > 1 && Math.abs(c - b) == 1 && b != 15 && b != 14) {
                     //Vänster/höger sväng om riktning norr -> söder
                     if (c - b == 1) {
                         GPS += "R";
@@ -191,6 +197,7 @@ public class OverordnatSystem {
                     System.out.println("KUL6");
                 }
             }
+            //System.out.println("GPS " + GPS);
         }
         return GPS;
     }
@@ -201,10 +208,10 @@ public class OverordnatSystem {
         DataStore ds4 = new DataStore();
         ds3 = new DataStore();
 
-        ds.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Lagernatverk_20130213.csv");
-        ds2.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Orders_20130211.csv");
-        //ds.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Lagernatverk_20130213.csv");
-        //ds2.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
+        //ds.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Lagernatverk_20130213.csv");
+        //ds2.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Orders_20130211.csv");
+        ds.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Lagernatverk_20130213.csv");
+        ds2.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
 
         ds.readNet();
         ds2.readOrders();
