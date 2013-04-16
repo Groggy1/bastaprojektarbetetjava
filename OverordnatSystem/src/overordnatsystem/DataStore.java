@@ -27,6 +27,7 @@ public class DataStore {
     int[] shelfNode = new int[20];
     String[] shelfDirection = new String[20];
     int[] arcColor = new int[1000];
+    boolean startnod14anvand = false;
 
     public DataStore() {
         // Initialize the datastore with fixed size arrays for storing the network data
