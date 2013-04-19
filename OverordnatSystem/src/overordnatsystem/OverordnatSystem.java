@@ -243,8 +243,8 @@ public class OverordnatSystem {
                     ds3.orderEnd[j] = ds2.orderEnd[j];
                     System.out.println("ds3.orderStart[j]\t" + ds3.orderStart[j]);
                     System.out.println("ds3.orderEnd[j]\t\t" + ds3.orderEnd[j]);
-                    ds2.orderStart[j] = -1;
-                    ds2.orderEnd[j] = -1;
+                    ds2.orderStart[j] = 0;
+                    ds2.orderEnd[j] = 0;
                     numbers[l] = j;
                     l++;
                     k++;
@@ -263,16 +263,24 @@ public class OverordnatSystem {
                 ds3.orderEnd[i] = ds2.orderEnd[i];
                 System.out.println("ds3.orderStart[j]\t" + ds3.orderStart[i]);
                 System.out.println("ds3.orderEnd[j]\t\t" + ds3.orderEnd[i]);
-                ds2.orderStart[i] = -1;
-                ds2.orderEnd[i] = -1;
+                ds2.orderStart[i] = 0;
+                ds2.orderEnd[i] = 0;
             } else if (pppp != 0) {
                 ds3.orderStart[i] = 0;
                 ds3.orderEnd[i] = 0;
+                System.out.println("heej3!");
+                System.out.println("ds3.orderStart[j]\t" + ds3.orderStart[i]);
+                System.out.println("ds3.orderEnd[j]\t\t" + ds3.orderEnd[i]);
             }
             //System.out.println("i " + i + "\nStart: " + ds3.orderStart[i] + "\nStop: " + ds3.orderEnd[i] + "\n");
             i++;
         }
 
+        System.out.println("\n\n");
+        for (i = 0; i < ds3.orders; i++) {
+            System.out.println("ds3.orderStart[i]\t" + ds3.orderStart[i]);
+            System.out.println("ds3.orderEnd[i]\t\t" + ds3.orderEnd[i]);
+        }
         System.out.println("\n\n");
         int start;
         int stop;
@@ -280,120 +288,107 @@ public class OverordnatSystem {
 
         LinkedList<Vertex> path;
 
-        /*
-         for (i = 0; i < ds3.orders; i++) {
-         diff = 0;
-         int mindiff = 10000, nextnode = 0;
-         for (int j = 0; j < ds3.orders; j++) {
-         if (i == 0) {
-         start = (int) ds.shelfNode[0];
-         stop = (int) ds.shelfNode[ds3.orderStart[j]];
-         if (start != stop) {
-         path = op.createPlan(start, stop);
-         for (int q = 0; q < path.size(); q++) {
-         diff = (int) Math.max(Math.abs(ds.nodeY[start - 1] - ds.nodeY[stop - 1]), Math.abs(ds.nodeX[start - 1] - ds.nodeX[stop - 1]));
-         }
-         mindiff = Math.min(mindiff, diff);
-         //System.out.println("ds3.orderEnd +" + ds3.orderEnd[j]);
-         if (mindiff == diff) {
-         nextnode = j;
-         ds4.orderStart[i] = ds3.orderStart[j];
-         ds4.orderEnd[i] = ds3.orderEnd[j];
-         //System.out.println("ds4.orderStart[i] " + ds4.orderStart[i]);
-         //System.out.println("ds4.orderEnd[i] " + ds4.orderEnd[i]);
-         }
-         }
-         } else {
-         start = ds.shelfNode[ds4.orderEnd[i - 1]];
-         stop = ds.shelfNode[ds3.orderEnd[j]];
-         if (start != stop) {
-         path = op.createPlan(start, stop);
-         for (int q = 0; q < path.size(); q++) {
-         diff = diff + (int) Math.max(Math.abs(ds.nodeY[start - 1] - ds.nodeY[stop - 1]), Math.abs(ds.nodeX[start - 1] - ds.nodeX[stop - 1]));
-         }
 
-         int www = 0;
-         for (int qqq = 0; qqq < i; qqq++) {
-         if (ds4.orderStart[qqq] == stop) {
-         www++;
-         }
-         }
-         mindiff = Math.min(mindiff, diff);
-         //System.out.println("ds3.orderEnd +" + ds3.orderEnd[j]);
-         if (mindiff == diff) {
-         nextnode = j;
-         ds4.orderStart[i] = ds3.orderStart[j];
-         ds4.orderEnd[i] = ds3.orderEnd[j];
-         ds3.orderStart += 0;
-         ds3.orderEnd += 0;
-         //System.out.println("ds4.orderStart[i] " + ds4.orderStart[i]);
-         //System.out.println("ds4.orderEnd[i] " + ds4.orderEnd[i]);
-         }
-         }
-         }
-         }
-         //System.out.println("I " + i + " DIFF " + diff + " nextnode " + nextnode);
-         }
+        for (i = 0; i < ds3.orders; i++) {
+            int mindiff = 1000000010, nextnode = 0;
+            for (int j = 0; j < ds3.orders; j++) {
+                diff = 0;
+                if (i == 0) {
+                    start = (int) ds.shelfNode[0];
+                    stop = (int) ds.shelfNode[ds3.orderStart[j]];
+                    if (start != stop) {
+                        path = op.createPlan(start, stop);
+                        for (int q = 0; q < path.size(); q++) {
+                            diff = diff + (int) Math.max(Math.abs(ds.nodeY[start - 1] - ds.nodeY[stop - 1]), Math.abs(ds.nodeX[start - 1] - ds.nodeX[stop - 1]));
+                            System.out.println("ditt " + diff);
+                        }
+                        mindiff = Math.min(mindiff, diff);
+                        System.out.println("min diff " + mindiff);
+                        //System.out.println("ds3.orderEnd +" + ds3.orderEnd[j]);
 
-         for (int j = 0; j < ds4.orders; j++) {
-         System.out.println("ds4.orderStart +" + ds4.orderStart[j]);
-         System.out.println("ds4.orderEnd +" + ds4.orderEnd[j]);
-         }
+                    }
+                } else {
+                    start = ds.shelfNode[ds4.orderEnd[i - 1]];
+                    stop = ds.shelfNode[ds3.orderEnd[j]];
+                    if (start != stop) {
+                        path = op.createPlan(start, stop);
+                        for (int q = 0; q < path.size(); q++) {
+                            diff = diff + (int) Math.max(Math.abs(ds.nodeY[start - 1] - ds.nodeY[stop - 1]), Math.abs(ds.nodeX[start - 1] - ds.nodeX[stop - 1]));
+                            System.out.println("diff " + diff);
+                        }
 
-         System.out.println("\n\n");
+                        mindiff = Math.min(mindiff, diff);
+                        System.out.println("min diff " + mindiff);
+                        //System.out.println("ds3.orderEnd +" + ds3.orderEnd[j]);
+                    }
+                }
+                if (mindiff == diff) {
+                    nextnode = j;
+                    ds4.orderStart[i] = ds3.orderStart[j];
+                    ds4.orderEnd[i] = ds3.orderEnd[j];
+                    ds3.orderStart[j] = 0;
+                    ds3.orderEnd[j] = 0;
+                    //System.out.println("ds4.orderStart[i] " + ds4.orderStart[i]);
+                    //System.out.println("ds4.orderEnd[i] " + ds4.orderEnd[i]);
+                }
+            }
+            //System.out.println("I " + i + " DIFF " + diff + " nextnode " + nextnode);
+        }
 
-         ds3 = ds4;
-         */
+        System.out.println("\n\n");
+
+        ds3 = ds4;
 
         for (int j = 0; j < ds3.orders; j++) {
             System.out.println("ds3.orderStart[j]\t" + ds3.orderStart[j]);
             System.out.println("ds3.orderEnd[j]\t\t" + ds3.orderEnd[j]);
             System.out.println("");
         }
+        /*
+         System.out.println("\n\n");
 
-        System.out.println("\n\n");
+         String GPS;
+         for (i = 0; i < ds3.orders; i++) {
+         //Förflyttning mellan ordrar
+         GPS = "";
+         if (i == 0) {
+         start = ds.shelfNode[0];
+         stop = (int) ds.shelfNode[ds3.orderStart[i]];
+         } else {
+         start = (int) ds.shelfNode[ds3.orderEnd[i - 1]];
+         stop = (int) ds.shelfNode[ds3.orderStart[i]];
+         }
+         if (start != stop) {
+         //System.out.println("i " + i);
+         //System.out.println("ds3.orderStart[i] " + ds3.orderStart[i]);
+         //System.out.println("ds.shelfNode[ds3.orderEnd[i]] " + ds.shelfNode[ds3.orderEnd[i]]);
+         path = op.createPlan(start, stop);
 
-        String GPS;
-        for (i = 0; i < ds3.orders; i++) {
-            //Förflyttning mellan ordrar
-            GPS = "";
-            if (i == 0) {
-                start = ds.shelfNode[0];
-                stop = (int) ds.shelfNode[ds3.orderStart[i]];
-            } else {
-                start = (int) ds.shelfNode[ds3.orderEnd[i - 1]];
-                stop = (int) ds.shelfNode[ds3.orderStart[i]];
-            }
-            if (start != stop) {
-                //System.out.println("i " + i);
-                //System.out.println("ds3.orderStart[i] " + ds3.orderStart[i]);
-                //System.out.println("ds.shelfNode[ds3.orderEnd[i]] " + ds.shelfNode[ds3.orderEnd[i]]);
-                path = op.createPlan(start, stop);
+         //System.out.println("Start " + start);
+         //System.out.println("Stop " + stop);
 
-                //System.out.println("Start " + start);
-                //System.out.println("Stop " + stop);
+         //System.out.println("ds.shelfDirection[ds3.orderStart[i]] " + ds.shelfDirection[ds3.orderStart[i]]);
+         GPS = this.GPSkoordinater(path, i, i);
+         } else if (start == stop && start == 24) {
+         GPS += "J";
+         }
+         System.out.println("\nGPS:" + GPS);
+         System.out.println("GPS.längd " + GPS.length() + "\n");
 
-                //System.out.println("ds.shelfDirection[ds3.orderStart[i]] " + ds.shelfDirection[ds3.orderStart[i]]);
-                GPS = this.GPSkoordinater(path, i, i);
-            } else if (start == stop && start == 24) {
-                GPS += "J";
-            }
-            System.out.println("\nGPS:" + GPS);
-            System.out.println("GPS.längd " + GPS.length() + "\n");
-
-            //Räkna ut förflyttning av LÅDA!
-            GPS = "";
-            start = (int) ds.shelfNode[ds3.orderStart[i]];
-            stop = (int) ds.shelfNode[ds3.orderEnd[i]];
-            if (start != stop) {
-                path = op.createPlan(start, stop);
-                GPS = this.GPSkoordinater(path, i, i);
-            } else if (start == stop && start == 24) {
-                GPS += "J";
-            }
-            System.out.println("\nGPS:" + GPS);
-            System.out.println("GPS.längd " + GPS.length() + "\n");
-        }
+         //Räkna ut förflyttning av LÅDA!
+         GPS = "";
+         start = (int) ds.shelfNode[ds3.orderStart[i]];
+         stop = (int) ds.shelfNode[ds3.orderEnd[i]];
+         if (start != stop) {
+         path = op.createPlan(start, stop);
+         GPS = this.GPSkoordinater(path, i, i);
+         } else if (start == stop && start == 24) {
+         GPS += "J";
+         }
+         System.out.println("\nGPS:" + GPS);
+         System.out.println("GPS.längd " + GPS.length() + "\n");
+         }
+         */
     }
 
     /*
