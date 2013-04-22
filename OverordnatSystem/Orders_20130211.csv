@@ -1,6 +1,18 @@
 5
-1 A
-2 1
-6 A
-5 6
-1 5
+2 4
+1 2
+7 8
+3 5
+6 9
+
+
+ds3.orderStart[j]	6
+ds3.orderEnd[j]		9
+ds3.orderStart[j]	7
+ds3.orderEnd[j]		8
+ds3.orderStart[j]	3
+ds3.orderEnd[j]		5
+ds3.orderStart[j]	1
+ds3.orderEnd[j]		2
+ds3.orderStart[j]	2
+ds3.orderEnd[j]		4

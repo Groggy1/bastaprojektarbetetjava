@@ -80,6 +80,7 @@ public class OverordnatSystem {
                     //System.out.println("Kul, kanske2");
                 }
             } else if (j == path.size() - 1) {
+                System.out.println("ds.shelfDirection[ds3.orderEnd[istop]] " + ds.shelfDirection[ds3.orderEnd[istop]]);
                 if (ds.shelfDirection[ds3.orderEnd[istop]].equalsIgnoreCase("N")) {
                     int a = Integer.parseInt(path.get(j - 1).getId());
                     int b = Integer.parseInt(path.get(j).getId());
@@ -117,6 +118,8 @@ public class OverordnatSystem {
                         GPS += "B";
                         //System.out.println("KUL12!!!");
                         //System.out.println("GPS +" + GPS[j]);
+                    } else if (b - a == 1) {
+                        GPS += "B";
                     }
                     //System.out.println("Kul, kanske5");
                 }
@@ -208,60 +211,81 @@ public class OverordnatSystem {
         ds4.orders = ds3.orders;
         int start, stop, diff, mindiff;
         int[] nextnode = new int[20];
-        Arrays.fill(nextnode, 50);
+        Arrays.fill(nextnode, 20);
         for (int i = 0; i < ds3.orders; i++) {
-            mindiff = 1000000000;
-            for (int j = 0; j < ds3.orders; j++) {
-                boolean stopp = true;
-                for (int q = 0; q < nextnode.length; q++) {
-                    if (nextnode[q] == j) {
-                        stopp = false;
-                    }
-                }
-                if (stopp) {
-                    diff = 0;
-                    if (i == 0) {
-                        start = ds.shelfNode[0];
-                        stop = ds.shelfNode[ds3.orderStart[j]];
-                        if (start != stop) {
-                            //System.out.println("Start " + start + " Stop " + stop);
-                            path = op.createPlan(start, stop);
-                            for (int k = 0; k < path.size() - 1; k++) {
-                                diff = diff + (int) Math.max(Math.abs(ds.nodeY[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeY[Integer.parseInt(path.get(k + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeX[Integer.parseInt(path.get(k + 1).getId()) - 1]));
-                                //System.out.println("Integer.parseInt(path.get(k).getId()) " + Integer.parseInt(path.get(k).getId()));
-                            }
-                        } else {
-                            diff = 0;
-                            System.out.println("Hej diff = 0 start");
+            boolean notj;
+            int[] notja = new int[30];
+            Arrays.fill(notja, 50);
+            do {
+                notj = false;
+                mindiff = 1000000000;
+                for (int j = 0; j < ds3.orders; j++) {
+                    boolean stopp = true;
+                    for (int q = 0; q < nextnode.length; q++) {
+                        //System.out.println("nextnode[q] " + nextnode[q]);
+                        if (nextnode[q] == j) {
+                            stopp = false;
                         }
-                    } else {
-                        //System.out.println("i " + i);
-                        start = ds.shelfNode[ds3.orderEnd[i]];
-                        stop = ds.shelfNode[ds3.orderStart[j]];
-                        if (start != stop) {
-                            //System.out.println("Start " + start + " Stop " + stop);
-                            path = op.createPlan(start, stop);
-                            for (int k = 0; k < path.size() - 1; k++) {
-                                diff = diff + (int) Math.max(Math.abs(ds.nodeY[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeY[Integer.parseInt(path.get(k + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeX[Integer.parseInt(path.get(k + 1).getId()) - 1]));
-                                //System.out.println("Integer.parseInt(path.get(k).getId()) " + Integer.parseInt(path.get(k).getId()));
-                            }
-                        } else {
-                            diff = 0;
-                            System.out.println("Hej diff = 0 inte start");
+                        if (notja[q] == j) {
+                            stopp = false;
                         }
                     }
-                    if (diff < mindiff) {
-                        System.out.println("Inne i mindiff");
-                        mindiff = diff;
-                        nextnode[i] = j;
-                        ds4.orderStart[i] = ds3.orderStart[j];
-                        ds4.orderEnd[i] = ds3.orderEnd[j];
-                        //System.out.println(diff + " next node " + nextnode[i]);
-                        //System.out.println("ds4.orderStart[i] " + ds4.orderStart[i]);
-                        //System.out.println("ds4.orderEnd[i] " + ds4.orderEnd[i]);
+                    if (stopp) {
+                        diff = 0;
+                        if (i == 0) {
+                            start = ds.shelfNode[0];
+                            stop = ds.shelfNode[ds3.orderStart[j]];
+                            if (start != stop) {
+                                //System.out.println("Start " + start + " Stop " + stop);
+                                path = op.createPlan(start, stop);
+                                for (int k = 0; k < path.size() - 1; k++) {
+                                    diff = diff + (int) Math.max(Math.abs(ds.nodeY[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeY[Integer.parseInt(path.get(k + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeX[Integer.parseInt(path.get(k + 1).getId()) - 1]));
+                                    //System.out.println("Integer.parseInt(path.get(k).getId()) " + Integer.parseInt(path.get(k).getId()));
+                                }
+                            } else if (start == stop && start == 24) {
+                                diff = 0;
+                                System.out.println("Hej diff = 0 start");
+                            }
+                        } else {
+                            start = ds.shelfNode[ds4.orderEnd[i - 1]];
+                            stop = ds.shelfNode[ds3.orderStart[j]];
+                            if (start != stop) {
+                                //System.out.println("Start " + start + " Stop " + stop);
+                                path = op.createPlan(start, stop);
+                                for (int k = 0; k < path.size() - 1; k++) {
+                                    diff = diff + (int) Math.max(Math.abs(ds.nodeY[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeY[Integer.parseInt(path.get(k + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeX[Integer.parseInt(path.get(k + 1).getId()) - 1]));
+                                    //System.out.println("Integer.parseInt(path.get(k).getId()) " + Integer.parseInt(path.get(k).getId()));
+                                }
+                            } else if (start == stop && start == 24) {
+                                diff = 0;
+                                System.out.println("Hej diff = 0 inte start");
+                                System.out.println("Start " + start + " stop " + stop);
+                            }
+                        }
+                        System.out.println("Diff " + diff + " mindiff " + mindiff);
+                        System.out.println("Start " + start + " stop " + stop);
+                        System.out.println("i " + i + " j " + j);
+                        if (diff < mindiff) {
+                            for (int k = j - 1; k >= 0; k--) {
+                                if (ds3.orderEnd[j] == ds3.orderStart[k]) {
+                                    notj = true;
+                                    notja[k] = j;
+                                    System.out.println("CPCPCPCPCPCP! k " + k + " j " + j);
+                                }
+                            }
+                            System.out.println("Inne i mindiff");
+                            mindiff = diff;
+                            nextnode[i] = j;
+                            ds4.orderStart[i] = ds3.orderStart[j];
+                            ds4.orderEnd[i] = ds3.orderEnd[j];
+                            //System.out.println(diff + " next node " + nextnode[i]);
+                            System.out.println("ds4.orderStart[i] " + ds4.orderStart[i]);
+                            System.out.println("ds4.orderEnd[i] " + ds4.orderEnd[i]);
+                        }
                     }
                 }
-            }
+            } while (notj);
+
         }
         return ds4;
     }
@@ -273,7 +297,7 @@ public class OverordnatSystem {
             for (int j = i + 1; j < ds3.orders; j++) {
                 System.out.println("ds2.orderStart[j]\t" + ds2.orderStart[j]);
                 System.out.println("ds2.orderEnd[j]\t\t" + ds2.orderEnd[j]);
-                System.out.println(" j " + j);
+                System.out.println("j " + j);
                 if (ds2.orderStart[j] == ds2.orderEnd[i]) {
                     ds3.orderStart[j] = ds2.orderStart[i];
                     ds3.orderEnd[j] = ds2.orderEnd[j];
@@ -327,7 +351,6 @@ public class OverordnatSystem {
 
         System.out.println("\n\n");
         for (int i = 0; i < ds3.orders; i++) {
-            System.out.println("haha");
             System.out.println("ds3.orderStart[i]\t" + ds3.orderStart[i]);
             System.out.println("ds3.orderEnd[i]\t\t" + ds3.orderEnd[i]);
         }
