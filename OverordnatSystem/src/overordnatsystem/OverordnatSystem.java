@@ -22,15 +22,75 @@ public class OverordnatSystem {
     DataStore ds3;
     ControlUI cui;
 
+    public String bluetoothkom(BufferedReader bluetooth_in) {
+        String meddelande_ut = "";
+        try {
+            String meddelande_in = bluetooth_in.readLine();
+
+            String O = "" + meddelande_in.charAt(0);
+            String U = meddelande_in.substring(1);
+
+            if (meddelande_in.equalsIgnoreCase("C")) {
+                System.out.println("Jag har fått ack");
+                System.out.println("Jag ska vänta 5000ms");
+                Thread.sleep(5000);
+                System.out.println("Jag har väntat");
+
+                meddelande_in = bluetooth_in.readLine();
+
+
+                if (meddelande_in.equalsIgnoreCase("y")) {
+                    System.out.println("klar");
+                    System.out.println("kalla på opti");
+                    meddelande_ut = "start";
+                } else if (meddelande_in.equalsIgnoreCase("n")) {
+                    System.out.println("Jag är LITHe vilse");
+                    meddelande_ut = "start";
+
+                } else if (meddelande_in.equalsIgnoreCase("e")) {
+                    System.out.println("Skicka om");
+                    meddelande_ut = "start";
+                }
+            } else if (O.equalsIgnoreCase("D")) {
+                System.out.println("Distansen är: " + U + "cm");
+            } else if (meddelande_in.equalsIgnoreCase("e")) {
+                System.out.println("Skicka om");
+                meddelande_ut = "start";
+            }
+        } catch (Exception e) {
+            System.out.print(e.toString());
+        }
+        return meddelande_ut;
+    }
+
     public String GPSkoordinater(LinkedList<Vertex> path, int istart, int istop) {
         String GPS = "";
+        //System.out.println("start " + istart + "stop " + istop + " ds.shelfDirection[ds3.orderStart[istart]] " + ds.shelfDirection[ds3.orderStart[istart]]);
         for (int j = 0; j < path.size(); j++) {
             System.out.println(path.get(j).getId());
-            if (j == 0) {
+            boolean startnod14a = true;
+            boolean startnod14b = true;
+            if (j < path.size() - 1) {
+                //System.out.println("path.get(j).getId() " + path.get(j).getId());
+                //System.out.println("path.get(j+1).getId() " + path.get(j + 1).getId());
+                if (Integer.parseInt(path.get(j).getId()) == 14 && Integer.parseInt(path.get(j + 1).getId()) == 15 && !ds.startnod14anvand) {
+                    System.out.println("hej");
+                    startnod14a = false;
+                    ds.startnod14anvand = true;
+                } else if (Integer.parseInt(path.get(j).getId()) == 14 && Integer.parseInt(path.get(j + 1).getId()) == 6 && !ds.startnod14anvand) {
+                    startnod14b = false;
+                    ds.startnod14anvand = true;
+                }
+            }
+            if (j == 0 && startnod14a && startnod14b) {
                 if (ds.shelfDirection[ds3.orderStart[istart]].equalsIgnoreCase("N")) {
                     int a = Integer.parseInt(path.get(j).getId());
                     int b = Integer.parseInt(path.get(j + 1).getId());
-                    if (a - b == 1) {
+                    if (a == 19 && b == 20) {
+                        GPS += "L";
+                    } else if (a == 19 && b == 18) {
+                        GPS += "R";
+                    } else if (a - b == 1) {
                         GPS += "L";
                         //System.out.println("KUL!!!");
                         //System.out.println("GPS +" + GPS[j]);
@@ -107,6 +167,10 @@ public class OverordnatSystem {
                     }
                     //System.out.println("Kul, kanske5");
                 }
+            } else if (!startnod14a) {
+                GPS += "RR";
+            } else if (!startnod14b) {
+                GPS += "F";
             } else {
                 int a = Integer.parseInt(path.get(j - 1).getId());
                 int b = Integer.parseInt(path.get(j).getId());
@@ -120,15 +184,15 @@ public class OverordnatSystem {
                     //rakt fram lodrätt
                     GPS += "F";
                     System.out.println("KUL");
-                } else if (a - b > 1 && Math.abs(c - b) == 1 && b != 15) {
+                } else if (a - b > 1 && Math.abs(c - b) == 1 && b != 15 && b != 14) {
                     //Vänster/höger sväng om riktning norr -> söder
                     if (c - b == 1) {
                         GPS += "L";
                     } else if (b - c == 1) {
                         GPS += "R";
                     }
-                    System.out.println("KUL3");
-                } else if (b - a > 1 && Math.abs(c - b) == 1 && b != 15) {
+                    System.out.println("KUL43");
+                } else if (b - a > 1 && Math.abs(c - b) == 1 && b != 15 && b != 14) {
                     //Vänster/höger sväng om riktning norr -> söder
                     if (c - b == 1) {
                         GPS += "R";
@@ -180,56 +244,105 @@ public class OverordnatSystem {
                     System.out.println("KUL6");
                 }
             }
+            //System.out.println("GPS " + GPS);
         }
         return GPS;
     }
-
-    public String bluetoothkom(BufferedReader bluetooth_in) {
-        String meddelande_ut = "";
-        try {
-            String meddelande_in = bluetooth_in.readLine();
-
-            String O = "" + meddelande_in.charAt(0);
-            String U = meddelande_in.substring(1);
-
-            if (meddelande_in.equalsIgnoreCase("C")) {
-                System.out.println("Jag har fått ack");
-                System.out.println("Jag ska vänta 5000ms");
-                Thread.sleep(5000);
-                System.out.println("Jag har väntat");
-
-                meddelande_in = bluetooth_in.readLine();
-
-
-                if (meddelande_in.equalsIgnoreCase("y")) {
-                    System.out.println("klar");
-                    System.out.println("kalla på opti");
-                    meddelande_ut = "start";
-                } else if (meddelande_in.equalsIgnoreCase("n")) {
-                    System.out.println("Jag är LITHe vilse");
-                    meddelande_ut = "start";
-
-                } else if (meddelande_in.equalsIgnoreCase("e")) {
-                    System.out.println("Skicka om");
-                    meddelande_ut = "start";
+    
+    public DataStore optorderlista(DataStore ds3, OptPlan op) {
+        LinkedList<Vertex> path;
+        DataStore ds4 = new DataStore();
+        ds4.orders = ds3.orders;
+        int start, stop, diff, mindiff;
+        int[] nextnode = new int[20];
+        Arrays.fill(nextnode, 50);
+        for (int i = 0; i < ds3.orders; i++) {
+            mindiff = 1000000000;
+            for (int j = 0; j < ds3.orders; j++) {
+                boolean stopp = true;
+                for (int q = 0; q < nextnode.length; q++) {
+                    if (nextnode[q] == j) {
+                        stopp = false;
+                    }
                 }
-            } else if (O.equalsIgnoreCase("D")) {
-                System.out.println("Distansen är: " + U + "cm");
-            } else if (meddelande_in.equalsIgnoreCase("e")) {
-                System.out.println("Skicka om");
-                meddelande_ut = "start";
+                if (stopp) {
+                    diff = 0;
+                    if (i == 0) {
+                        start = ds.shelfNode[0];
+                        stop = ds.shelfNode[ds3.orderStart[j]];
+                        if (start != stop) {
+                            //System.out.println("Start " + start + " Stop " + stop);
+                            path = op.createPlan(start, stop);
+                            for (int k = 0; k < path.size() - 1; k++) {
+                                diff = diff + (int) Math.max(Math.abs(ds.nodeY[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeY[Integer.parseInt(path.get(k + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeX[Integer.parseInt(path.get(k + 1).getId()) - 1]));
+                                //System.out.println("Integer.parseInt(path.get(k).getId()) " + Integer.parseInt(path.get(k).getId()));
+                            }
+                        } else {
+                            diff = 0;
+                            System.out.println("Hej diff = 0 start");
+                        }
+                    } else {
+                        //System.out.println("i " + i);
+                        start = ds.shelfNode[ds3.orderEnd[i]];
+                        stop = ds.shelfNode[ds3.orderStart[j]];
+                        if (start != stop) {
+                            //System.out.println("Start " + start + " Stop " + stop);
+                            path = op.createPlan(start, stop);
+                            for (int k = 0; k < path.size() - 1; k++) {
+                                diff = diff + (int) Math.max(Math.abs(ds.nodeY[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeY[Integer.parseInt(path.get(k + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeX[Integer.parseInt(path.get(k + 1).getId()) - 1]));
+                                //System.out.println("Integer.parseInt(path.get(k).getId()) " + Integer.parseInt(path.get(k).getId()));
+                            }
+                        } else {
+                            diff = 0;
+                            System.out.println("Hej diff = 0 inte start");
+                        }
+                    }
+                    if (diff < mindiff) {
+                        System.out.println("Inne i mindiff");
+                        mindiff = diff;
+                        nextnode[i] = j;
+                        ds4.orderStart[i] = ds3.orderStart[j];
+                        ds4.orderEnd[i] = ds3.orderEnd[j];
+                        //System.out.println(diff + " next node " + nextnode[i]);
+                        //System.out.println("ds4.orderStart[i] " + ds4.orderStart[i]);
+                        //System.out.println("ds4.orderEnd[i] " + ds4.orderEnd[i]);
+                    }
+                }
             }
-        } catch (Exception e) {
-            System.out.print(e.toString());
         }
-        return meddelande_ut;
+        return ds4;
+    }
+
+    public DataStore onodigaforflytt(DataStore ds2) {
+        boolean plockatorder = false;
+        for (int i = 0; i < ds3.orders; i++) {
+            System.out.println("\n\n\n" + "i " + i);
+            for (int j = i + 1; j < ds3.orders; j++) {
+                System.out.println("ds2.orderStart[j]\t" + ds2.orderStart[j]);
+                System.out.println("ds2.orderEnd[j]\t\t" + ds2.orderEnd[j]);
+                System.out.println(" j " + j);
+                if (ds2.orderStart[j] == ds2.orderEnd[i]) {
+                    ds3.orderStart[j] = ds2.orderStart[i];
+                    ds3.orderEnd[j] = ds2.orderEnd[j];
+                    plockatorder = true;
+                    break;
+                } else if (j == ds3.orders - 1) {
+                    ds3.orderStart[i] = ds2.orderStart[i];
+                    ds3.orderEnd[i] = ds2.orderEnd[i];
+                }
+            }
+        }
+        if (!plockatorder) {
+            ds3 = ds2;
+        }
+        return ds3;
     }
 
     OverordnatSystem() {
         try {
             StreamConnection anslutning = (StreamConnection) Connector.open("btspp://F07BCBF04304:8");
             PrintStream bluetooth_ut = new PrintStream(anslutning.openOutputStream());
-// F07BCBF04304:8 testdator
+            //F07BCBF04304:8 testdator
             BufferedReader bluetooth_in = new BufferedReader(new InputStreamReader(anslutning.openInputStream()));
 
             BufferedReader tangentbord = new BufferedReader(new InputStreamReader(System.in));
@@ -272,50 +385,6 @@ public class OverordnatSystem {
 
             System.out.println("\n\n\n\n\n");
 
-            int i = 0;
-            int k, l, m, diff = 0;
-            l = 0;
-            int[] numbers = new int[ds3.orders];
-            while (i < ds3.orders) {
-                k = 0;
-                m = 0;
-                int pppp = 0;
-                for (int j = i; j < ds3.orders; j++) {
-                    if (ds2.orderStart[j] == ds2.orderEnd[i] && i != j) {
-                        System.out.println("heej!");
-                        ds3.orderStart[j] = ds2.orderStart[i];
-                        ds3.orderEnd[j] = ds2.orderEnd[j];
-                        System.out.println("ds3.orderStart[j]\t" + ds3.orderStart[j]);
-                        System.out.println("ds3.orderEnd[j]\t\t" + ds3.orderEnd[j]);
-                        ds2.orderStart[j] = -1;
-                        ds2.orderEnd[j] = -1;
-                        numbers[l] = j;
-                        l++;
-                        k++;
-                        pppp++;
-                        break;
-                    }
-                }
-                for (int n = 0; n < l; n++) {
-                    if (numbers[n] == i) {
-                        m++;
-                    }
-                }
-                if (k == 0 && m == 0) {
-                    System.out.println("heej2!");
-                    ds3.orderStart[i] = ds2.orderStart[i];
-                    ds3.orderEnd[i] = ds2.orderEnd[i];
-                    System.out.println("ds3.orderStart[j]\t" + ds3.orderStart[i]);
-                    System.out.println("ds3.orderEnd[j]\t\t" + ds3.orderEnd[i]);
-                    ds2.orderStart[i] = -1;
-                    ds2.orderEnd[i] = -1;
-                } else if (pppp != 0) {
-                    ds3.orderStart[i] = 0;
-                    ds3.orderEnd[i] = 0;
-                }
-                i++;
-            }
-
             System.out.println("\n\n");
             int start;
             int stop;
@@ -323,6 +392,9 @@ public class OverordnatSystem {
 
             LinkedList<Vertex> path;
 
+            ds3 = this.onodigaforflytt(ds2);
+            ds3 = this.optorderlista(ds3, op);
+            
             for (int j = 0; j < ds3.orders; j++) {
                 System.out.println("ds3.orderStart[j]\t" + ds3.orderStart[j]);
                 System.out.println("ds3.orderEnd[j]\t\t" + ds3.orderEnd[j]);
@@ -332,7 +404,7 @@ public class OverordnatSystem {
             System.out.println("\n\n");
 
             String GPS;
-            for (i = 0; i < ds3.orders; i++) {
+            for (int i = 0; i < ds3.orders; i++) {
                 //Förflyttning mellan ordrar
                 GPS = "";
                 if (i == 0) {

@@ -30,6 +30,7 @@ public class DataStore {
     boolean updateUIflag = false;
     double robotX;
     double robotY;
+    boolean startnod14anvand = false;
 
     public DataStore() {
         // Initialize the datastore with fixed size arrays for storing the network data
