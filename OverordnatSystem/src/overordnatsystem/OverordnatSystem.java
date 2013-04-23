@@ -223,10 +223,7 @@ public class OverordnatSystem {
                     boolean stopp = true;
                     for (int q = 0; q < nextnode.length; q++) {
                         //System.out.println("nextnode[q] " + nextnode[q]);
-                        if (nextnode[q] == j) {
-                            stopp = false;
-                        }
-                        if (notja[q] == j) {
+                        if (nextnode[q] == j || notja[q] == j) {
                             stopp = false;
                         }
                     }
