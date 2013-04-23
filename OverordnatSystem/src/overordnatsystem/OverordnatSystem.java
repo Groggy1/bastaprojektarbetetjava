@@ -25,37 +25,46 @@ public class OverordnatSystem {
     public String bluetoothkom(BufferedReader bluetooth_in) {
         String meddelande_ut = "";
         try {
+            System.out.println("väntar");
+            //Väntar på meddelande från robot
             String meddelande_in = bluetooth_in.readLine();
+            System.out.println(meddelande_in);
 
+            //Om distans används följande variabler
             String O = "" + meddelande_in.charAt(0);
             String U = meddelande_in.substring(1);
 
+            //Om robot mottar orderlista med x som start och z som slut fås ack tillbaka
             if (meddelande_in.equalsIgnoreCase("C")) {
                 System.out.println("Jag har fått ack");
-                System.out.println("Jag ska vänta 5000ms");
-                Thread.sleep(5000);
-                System.out.println("Jag har väntat");
+                // System.out.println("Jag ska vänta 5000ms");
+                // Thread.sleep(5000);
+                // System.out.println("väntar");
 
+                // meddelande_in = null;
+                //Vänta på hur det går för roboten, dvs om den klarade orderlistan eller inte
                 meddelande_in = bluetooth_in.readLine();
 
+                System.out.println("meddelande_in efter ack " + meddelande_in);
 
+                //Klarade orderlistan
                 if (meddelande_in.equalsIgnoreCase("y")) {
                     System.out.println("klar");
                     System.out.println("kalla på opti");
                     meddelande_ut = "start";
                 } else if (meddelande_in.equalsIgnoreCase("n")) {
+                    //Klarade inte orderlistan
                     System.out.println("Jag är LITHe vilse");
                     meddelande_ut = "start";
 
-                } else if (meddelande_in.equalsIgnoreCase("e")) {
-                    System.out.println("Skicka om");
-                    meddelande_ut = "start";
                 }
-            } else if (O.equalsIgnoreCase("D")) {
-                System.out.println("Distansen är: " + U + "cm");
             } else if (meddelande_in.equalsIgnoreCase("e")) {
+                //Felsändning
                 System.out.println("Skicka om");
                 meddelande_ut = "start";
+            } else if (O.equalsIgnoreCase("D")) {
+                //Distans
+                System.out.println("Distansen är: " + U + "cm");
             }
         } catch (Exception e) {
             System.out.print(e.toString());
@@ -164,6 +173,8 @@ public class OverordnatSystem {
                         GPS += "B";
                         //System.out.println("KUL12!!!");
                         //System.out.println("GPS +" + GPS[j]);
+                    } else if (b - a == 1) {
+                        GPS += "B";
                     }
                     //System.out.println("Kul, kanske5");
                 }
@@ -248,7 +259,7 @@ public class OverordnatSystem {
         }
         return GPS;
     }
-    
+
     public DataStore optorderlista(DataStore ds3, OptPlan op) {
         LinkedList<Vertex> path;
         DataStore ds4 = new DataStore();
@@ -279,11 +290,11 @@ public class OverordnatSystem {
                             }
                         } else {
                             diff = 0;
-                            System.out.println("Hej diff = 0 start");
+                            //System.out.println("Hej diff = 0 start");
                         }
                     } else {
                         //System.out.println("i " + i);
-                        start = ds.shelfNode[ds3.orderEnd[i]];
+                        start = ds.shelfNode[ds4.orderEnd[i - 1]];
                         stop = ds.shelfNode[ds3.orderStart[j]];
                         if (start != stop) {
                             //System.out.println("Start " + start + " Stop " + stop);
@@ -294,11 +305,11 @@ public class OverordnatSystem {
                             }
                         } else {
                             diff = 0;
-                            System.out.println("Hej diff = 0 inte start");
+                            //System.out.println("Hej diff = 0 inte start");
                         }
                     }
                     if (diff < mindiff) {
-                        System.out.println("Inne i mindiff");
+                        //System.out.println("Inne i mindiff");
                         mindiff = diff;
                         nextnode[i] = j;
                         ds4.orderStart[i] = ds3.orderStart[j];
@@ -339,6 +350,43 @@ public class OverordnatSystem {
     }
 
     OverordnatSystem() {
+        ds = new DataStore();
+        DataStore ds2 = new DataStore();
+        DataStore ds4 = new DataStore();
+        ds3 = new DataStore();
+
+        ds.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Lagernatverk_20130213.csv");
+        ds.readNet();
+        ds.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
+        ds.readOrders();
+        ds2.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
+        ds2.readOrders();
+
+        cui = new ControlUI(ds);
+        cui.setVisible(true);
+        cui.showStatus();
+
+        GuiUpdate g1 = new GuiUpdate(ds, cui);
+        Thread t2 = new Thread(g1);
+        t2.start();
+
+        cui.jTextArea2.append("Ej optimerad orderlista:\n");
+        for (int j = 0; j < ds2.orders; j++) {
+            if (ds2.orderStart[j] != ds2.orderEnd[j]) {
+                cui.jTextArea2.append("" + ds2.orderStart[j]);
+                cui.jTextArea2.append(" " + ds2.orderEnd[j] + "\n");
+                System.out.println("");
+            }
+        }
+
+        while (!ds.start) {
+            try {
+                Thread.sleep(5000);
+            } catch (Exception e) {
+                System.out.print(e.toString());
+            }
+        }
+
         try {
             StreamConnection anslutning = (StreamConnection) Connector.open("btspp://F07BCBF04304:8");
             PrintStream bluetooth_ut = new PrintStream(anslutning.openOutputStream());
@@ -349,10 +397,7 @@ public class OverordnatSystem {
 
             String meddelande_ut = "start";
 
-            ds = new DataStore();
-            DataStore ds2 = new DataStore();
-            DataStore ds4 = new DataStore();
-            ds3 = new DataStore();
+
 
             //ds.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Lagernatverk_20130213.csv");
             //ds2.setFileName("C:/Users/oskst764/Desktop/hej/OverordnatSystem/Orders_20130211.csv");
@@ -363,20 +408,7 @@ public class OverordnatSystem {
             //ds2.setFileName("C:/Users/Groggy/Documents/GitHub/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
             //ds2.readOrders();
 
-            ds.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Lagernatverk_20130213.csv");
-            ds.readNet();
-            ds.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
-            ds.readOrders();
-            ds2.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
-            ds2.readOrders();
 
-            cui = new ControlUI(ds);
-            cui.setVisible(true);
-            cui.showStatus();
-
-            GuiUpdate g1 = new GuiUpdate(ds, cui);
-            Thread t2 = new Thread(g1);
-            t2.start();
 
             ds3.orders = ds2.orders;
             ds3.fileName = ds2.fileName;
@@ -394,17 +426,33 @@ public class OverordnatSystem {
 
             ds3 = this.onodigaforflytt(ds2);
             ds3 = this.optorderlista(ds3, op);
-            
+
+            //skriv ut den optimerade orderlistan i orderlistafönstret
+            /*for(int i = 0; i < ds3.orders; i++) {
+            cui.jTextArea2.append(ds3.arcStart[i] + " " + ds3.arcEnd[i]);
+            }*/
+
+            cui.jTextArea2.append("Optimerad orderlista:\n");
             for (int j = 0; j < ds3.orders; j++) {
-                System.out.println("ds3.orderStart[j]\t" + ds3.orderStart[j]);
-                System.out.println("ds3.orderEnd[j]\t\t" + ds3.orderEnd[j]);
-                System.out.println("");
+                if (ds3.orderStart[j] != ds3.orderEnd[j]) {
+                    cui.jTextArea2.append("" + ds3.orderStart[j]);
+                    cui.jTextArea2.append(" " + ds3.orderEnd[j] + "\n");
+                    System.out.println("");
+                }
             }
 
             System.out.println("\n\n");
 
             String GPS;
             for (int i = 0; i < ds3.orders; i++) {
+                //stoppa roboten när den precis har lämnat en låda
+                while (!ds.start) {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (Exception e) {
+                        System.out.print(e.toString());
+                    }
+                }
                 //Förflyttning mellan ordrar
                 GPS = "";
                 if (i == 0) {
@@ -428,6 +476,7 @@ public class OverordnatSystem {
                     if (meddelande_ut.equalsIgnoreCase("start")) {
                         meddelande_ut = GPS;
                         meddelande_ut = "x" + meddelande_ut + "z";
+                        System.out.println("mellan meddelande_ut " + meddelande_ut);
                         bluetooth_ut.println(meddelande_ut);
                     }
                     meddelande_ut = this.bluetoothkom(bluetooth_in);
@@ -462,6 +511,7 @@ public class OverordnatSystem {
                     if (meddelande_ut.equalsIgnoreCase("start")) {
                         meddelande_ut = GPS;
                         meddelande_ut = "x" + meddelande_ut + "z";
+                        System.out.println("under meddelande_ut " + meddelande_ut);
                         bluetooth_ut.println(meddelande_ut);
                     }
                     meddelande_ut = this.bluetoothkom(bluetooth_in);
@@ -476,6 +526,9 @@ public class OverordnatSystem {
                     }
                 }
                 Arrays.fill(ds.arcColor, 0);
+                ds.robotX = ds.nodeX[stop - 1];
+                ds.robotY = ds.nodeY[stop - 1];
+                cui.repaint();
             }
         } catch (Exception e) {
             System.out.print(e.toString());

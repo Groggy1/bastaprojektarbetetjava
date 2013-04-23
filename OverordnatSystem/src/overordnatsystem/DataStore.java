@@ -31,6 +31,7 @@ public class DataStore {
     double robotX;
     double robotY;
     boolean startnod14anvand = false;
+    boolean start = false;
 
     public DataStore() {
         // Initialize the datastore with fixed size arrays for storing the network data

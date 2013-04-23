@@ -75,7 +75,7 @@ public class ControlUI extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 607, Short.MAX_VALUE)
+            .addGap(0, 603, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -84,7 +84,7 @@ public class ControlUI extends javax.swing.JFrame {
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
-        jTextArea1.setBorder(javax.swing.BorderFactory.createTitledBorder("Lista:"));
+        jTextArea1.setBorder(javax.swing.BorderFactory.createTitledBorder("Meddelanden:"));
         jScrollPane1.setViewportView(jTextArea1);
 
         jButton2.setText("Läs in ordrar");
@@ -108,8 +108,8 @@ public class ControlUI extends javax.swing.JFrame {
             }
         });
 
-        jTextArea2.setEditable(false);
         jTextArea2.setColumns(20);
+        jTextArea2.setEditable(false);
         jTextArea2.setForeground(new java.awt.Color(0, 0, 153));
         jTextArea2.setRows(5);
         jTextArea2.setBorder(javax.swing.BorderFactory.createTitledBorder("Orderlista:"));
@@ -122,7 +122,7 @@ public class ControlUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 605, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -131,8 +131,8 @@ public class ControlUI extends javax.swing.JFrame {
                                 .addComponent(jButton1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton3))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -149,9 +149,9 @@ public class ControlUI extends javax.swing.JFrame {
                             .addComponent(jButton1)
                             .addComponent(jButton3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -190,7 +190,7 @@ public class ControlUI extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 607, Short.MAX_VALUE)
+            .addGap(0, 603, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -199,7 +199,7 @@ public class ControlUI extends javax.swing.JFrame {
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
-        jTextArea1.setBorder(javax.swing.BorderFactory.createTitledBorder("Lista:"));
+        jTextArea1.setBorder(javax.swing.BorderFactory.createTitledBorder("Meddelanden:"));
         jScrollPane1.setViewportView(jTextArea1);
 
         jButton2.setText("Läs in ordrar");
@@ -223,8 +223,8 @@ public class ControlUI extends javax.swing.JFrame {
             }
         });
 
-        jTextArea2.setEditable(false);
         jTextArea2.setColumns(20);
+        jTextArea2.setEditable(false);
         jTextArea2.setForeground(new java.awt.Color(0, 0, 153));
         jTextArea2.setRows(5);
         jTextArea2.setBorder(javax.swing.BorderFactory.createTitledBorder("Orderlista:"));
@@ -237,7 +237,7 @@ public class ControlUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 605, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -246,8 +246,8 @@ public class ControlUI extends javax.swing.JFrame {
                                 .addComponent(jButton1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton3))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -264,9 +264,9 @@ public class ControlUI extends javax.swing.JFrame {
                             .addComponent(jButton1)
                             .addComponent(jButton3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -309,14 +309,16 @@ public class ControlUI extends javax.swing.JFrame {
 
     //Startknappen: starta optimeringen
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        jTextArea2.append(" \n Starta optimeringen");
+        jTextArea1.append(" \n Starta optimeringen");
+        ds.start = true;
         System.out.println("Starta optimeringen");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     //Stoppknappen: kör klart ordern och sen stannar roboten där den är. 
     //bara trycka på stopp när roboten har en låda.
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        jTextArea2.append("\n Stopp men kör klart ordern först");
+        jTextArea1.append("\n Stopp men kör klart ordern först");
+        ds.start = false;
     }//GEN-LAST:event_jButton3ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFileChooser fileChooser;
@@ -327,7 +329,7 @@ public class ControlUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
+    public javax.swing.JTextArea jTextArea2;
     // End of variables declaration//GEN-END:variables
     private MapPanel map;
 }
