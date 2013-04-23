@@ -444,7 +444,6 @@ public class OverordnatSystem {
                     cui.jTextArea2.setCaretPosition(cui.jTextArea2.getDocument().getLength());
                 }
             }
-            cui.jTextArea2.append("\nKör nu:\n");
 
             System.out.println("\n\n");
 
@@ -463,13 +462,11 @@ public class OverordnatSystem {
                 if (i == 0) {
                     start = ds.shelfNode[0];
                     stop = (int) ds.shelfNode[ds3.orderStart[i]];
-                    cui.jTextArea2.append("A -> " + ds3.orderStart[i] + "\n");
-                    cui.jTextArea2.setCaretPosition(cui.jTextArea2.getDocument().getLength());
+                    cui.jTextArea3.setText("A -> " + ds3.orderStart[i] + "\n");
                 } else {
                     start = (int) ds.shelfNode[ds3.orderEnd[i - 1]];
                     stop = (int) ds.shelfNode[ds3.orderStart[i]];
-                    cui.jTextArea2.append(ds3.orderEnd[i - 1] + " -> " + ds3.orderStart[i] + "\n");
-                    cui.jTextArea2.setCaretPosition(cui.jTextArea2.getDocument().getLength());
+                    cui.jTextArea3.setText(ds3.orderEnd[i - 1] + " -> " + ds3.orderStart[i] + "\n");
                 }
                 if (start != stop) {
                     path = op.createPlan(start, stop);
@@ -506,9 +503,7 @@ public class OverordnatSystem {
                 GPS = "";
                 start = (int) ds.shelfNode[ds3.orderStart[i]];
                 stop = (int) ds.shelfNode[ds3.orderEnd[i]];
-
-                cui.jTextArea2.append(ds3.orderStart[i] + " -> " + ds3.orderEnd[i] + "\n");
-                cui.jTextArea2.setCaretPosition(cui.jTextArea2.getDocument().getLength());
+                cui.jTextArea3.setText(ds3.orderStart[i] + " -> " + ds3.orderEnd[i] + "\n");
 
                 if (start != stop) {
                     path = op.createPlan(start, stop);
