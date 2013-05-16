@@ -418,7 +418,7 @@ public class OverordnatSystem {
         }
 
         try {
-            StreamConnection anslutning = (StreamConnection) Connector.open("btspp://F07BCBF04304:8");
+            StreamConnection anslutning = (StreamConnection) Connector.open("btspp://001204067209:1");
             PrintStream bluetooth_ut = new PrintStream(anslutning.openOutputStream());
             //F07BCBF04304:8 testdator
             BufferedReader bluetooth_in = new BufferedReader(new InputStreamReader(anslutning.openInputStream()));
@@ -508,8 +508,8 @@ public class OverordnatSystem {
                 //Om ingen längd på GPS-koordinaterna ges behöver ingenting skickas till roboten
                 if (GPS.length() > 0) {
                     if (meddelande_ut.equalsIgnoreCase("start")) {
-                        meddelande_ut = GPS;
-                        meddelande_ut = "x" + meddelande_ut + "z";
+                        meddelande_ut = "LLRR";
+                        //meddelande_ut = "x" + meddelande_ut + "z";
                         System.out.println("mellan meddelande_ut " + meddelande_ut);
                         bluetooth_ut.println(meddelande_ut);
                     }
@@ -546,7 +546,7 @@ public class OverordnatSystem {
                 if (GPS.length() > 0) {
                     if (meddelande_ut.equalsIgnoreCase("start")) {
                         meddelande_ut = GPS;
-                        meddelande_ut = "x" + meddelande_ut + "z";
+                        //meddelande_ut = "x" + meddelande_ut + "z";
                         System.out.println("under meddelande_ut " + meddelande_ut);
                         bluetooth_ut.println(meddelande_ut);
                     }
