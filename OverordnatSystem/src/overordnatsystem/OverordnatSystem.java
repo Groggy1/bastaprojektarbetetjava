@@ -418,7 +418,8 @@ public class OverordnatSystem {
         }
 
         try {
-            StreamConnection anslutning = (StreamConnection) Connector.open("btspp://001204067209:1");
+            //StreamConnection anslutning = (StreamConnection) Connector.open("btspp://001204067209:1");//isch robit
+            StreamConnection anslutning = (StreamConnection) Connector.open("btspp://F07BCBF04304:8");
             PrintStream bluetooth_ut = new PrintStream(anslutning.openOutputStream());
             //F07BCBF04304:8 testdator
             BufferedReader bluetooth_in = new BufferedReader(new InputStreamReader(anslutning.openInputStream()));
@@ -449,7 +450,7 @@ public class OverordnatSystem {
 
             System.out.println("\n\n");
             int start;
-            int stop;
+            int stop = 0;
             OptPlan op = new OptPlan(ds);
 
             LinkedList<Vertex> path;
@@ -475,7 +476,7 @@ public class OverordnatSystem {
             System.out.println("\n\n");
 
             String GPS;
-            for (int i = 0; i < ds3.orders; i++) {
+            for (int i = 0; i < ds3.orders + 1; i++) {
                 //stoppa roboten när den precis har lämnat en låda
                 while (!ds.start) {
                     try {
@@ -491,9 +492,14 @@ public class OverordnatSystem {
                     stop = (int) ds.shelfNode[ds3.orderStart[i]];
                     cui.jTextArea3.setText("A -> " + ds3.orderStart[i] + "\n");
                 } else {
-                    start = (int) ds.shelfNode[ds3.orderEnd[i - 1]];
-                    stop = (int) ds.shelfNode[ds3.orderStart[i]];
-                    cui.jTextArea3.setText(ds3.orderEnd[i - 1] + " -> " + ds3.orderStart[i] + "\n");
+                    if (i < ds3.orders) {
+                        start = (int) ds.shelfNode[ds3.orderEnd[i - 1]];
+                        stop = (int) ds.shelfNode[ds3.orderStart[i]];
+                        cui.jTextArea3.setText(ds3.orderEnd[i - 1] + " -> " + ds3.orderStart[i] + "\n");
+                    } else {
+                        start = stop;
+                        cui.jTextArea3.setText("FÄRDIG!");
+                    }
                 }
                 if (start != stop) {
                     path = op.createPlan(start, stop);
@@ -508,7 +514,7 @@ public class OverordnatSystem {
                 //Om ingen längd på GPS-koordinaterna ges behöver ingenting skickas till roboten
                 if (GPS.length() > 0) {
                     if (meddelande_ut.equalsIgnoreCase("start")) {
-                        meddelande_ut = "LLRR";
+                        meddelande_ut = GPS;
                         //meddelande_ut = "x" + meddelande_ut + "z";
                         System.out.println("mellan meddelande_ut " + meddelande_ut);
                         bluetooth_ut.println(meddelande_ut);
@@ -528,10 +534,14 @@ public class OverordnatSystem {
 
                 //Räkna ut förflyttning av LÅDA!
                 GPS = "";
+                if (i < ds3.orders) {
                 start = (int) ds.shelfNode[ds3.orderStart[i]];
                 stop = (int) ds.shelfNode[ds3.orderEnd[i]];
                 cui.jTextArea3.setText(ds3.orderStart[i] + " -> " + ds3.orderEnd[i] + "\n");
-
+                } else {
+                    start = stop;
+                    cui.jTextArea3.setText("Färdigt");
+                }
                 if (start != stop) {
                     path = op.createPlan(start, stop);
                     GPS = this.GPSkoordinater(path, i, i);
@@ -550,11 +560,12 @@ public class OverordnatSystem {
                         System.out.println("under meddelande_ut " + meddelande_ut);
                         bluetooth_ut.println(meddelande_ut);
                     }
-                    meddelande_ut = this.bluetoothkom(bluetooth_in);
 
                     ds.robotX = ds.nodeX[start - 1];
                     ds.robotY = ds.nodeY[start - 1];
                     cui.repaint();
+                    meddelande_ut = this.bluetoothkom(bluetooth_in);
+
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException ex) {
