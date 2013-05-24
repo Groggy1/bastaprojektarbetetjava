@@ -51,6 +51,11 @@ public class OverordnatSystem {
 
                 //Klarade orderlistan
                 if (meddelande_in.equalsIgnoreCase("y")) {
+                    /*try { //test med 10 sek vila
+                    Thread.sleep(10000);
+                    } catch (Exception e) {
+                    System.out.print(e.toString());
+                    }*/
                     cui.jTextArea1.append("klar\nkalla på optimeringen\n");
                     cui.jTextArea1.setCaretPosition(cui.jTextArea1.getDocument().getLength()); //autoscroll
                     //System.out.println("");
@@ -102,30 +107,56 @@ public class OverordnatSystem {
                     }
                 }
                 if (j == 0 && startnod14a && startnod14b) {
+                    //Fixa fyra
                     if (ds.shelfDirection[ds3.orderStart[istart]].equalsIgnoreCase("N")) {
                         int a = Integer.parseInt(path.get(j).getId());
                         int b = Integer.parseInt(path.get(j + 1).getId());
-                        if (a == 19 && b == 20) {
+                        System.out.println("Norr");
+                        System.out.println("ds3.orderEnd[istart] " + ds3.orderEnd[istart]);
+                        if (a == 32 && b == 31) {
+                            GPS += "R";
+                        } else if (a == 19 && b == 20) {
                             GPS += "L";
                         } else if (a == 19 && b == 18) {
                             GPS += "R";
-                        } else if (a - b == 1) {
+                        } else if (a == 14 && b == 6) {
                             GPS += "L";
+                        }else if (a - b == 1) {
+                            GPS += "L";
+                            System.out.println("Norr L");
                             //System.out.println("KUL!!!");
                             //System.out.println("GPS +" + GPS[j]);
                         } else if (b - a == 1) {
                             GPS += "R";
+                            System.out.println("Norr R");
                             //System.out.println("KUL2!!!");
                             //System.out.println("GPS +" + GPS[j]);
                         }
                     } else if (ds.shelfDirection[ds3.orderStart[istart]].equalsIgnoreCase("S")) {
                         int a = Integer.parseInt(path.get(j).getId());
                         int b = Integer.parseInt(path.get(j + 1).getId());
-                        if (a - b == 1) {
+                        System.out.println("Söder1");
+                        System.out.println("ds3.orderEnd[istart] " + ds3.orderEnd[istart]);
+                        boolean kul = false;
+                        if (ds3.orderStart[istart] == 4) {
+                            GPS += "R";
+                            kul = true;
+                        } else if (a == 7 && b == 6) {
+                            GPS += "L";
+                            kul = true;
+                        } else if (a == 7 && b == 8) {
+                            GPS += "R";
+                            kul = true;
+                        } else if (a == 14 && b == 6) {
+                            GPS += "L";
+                            System.out.println("a == 14 && b == 6");
+                            kul = true;
+                        }
+                        if (a - b == 1 && !kul) {
                             GPS += "R";
                             //System.out.println("KUL3!!!");
                             //System.out.println("GPS +" + GPS[j]);
-                        } else if (b - a == 1) {
+                        } else if (b - a == 1 && !kul) {
                             GPS += "L";
                             //System.out.println("KUL4!!!");
                             //System.out.println("GPS +" + GPS[j]);
@@ -134,6 +165,7 @@ public class OverordnatSystem {
                     } else if (ds.shelfDirection[ds3.orderStart[istart]].equalsIgnoreCase("V")) {
                         int a = Integer.parseInt(path.get(j).getId());
                         int b = Integer.parseInt(path.get(j + 1).getId());
+                        System.out.println("Väster");
                         if (a - b == 8) {
                             GPS += "L";
                             //System.out.println("KUL5!!!");
@@ -150,11 +182,16 @@ public class OverordnatSystem {
                     if (ds.shelfDirection[ds3.orderEnd[istop]].equalsIgnoreCase("N")) {
                         int a = Integer.parseInt(path.get(j - 1).getId());
                         int b = Integer.parseInt(path.get(j).getId());
-                        if (a - b == 1) {
+                        boolean kul1 = false;
+                        if (a == 31 && b == 32) {
+                            GPS += "A";
+                            kul1 = true;
+                        }
+                        if (a - b == 1 && !kul1) {
                             GPS += "A";
                             //System.out.println("KUL7!!!");
                             //System.out.println("GPS +" + GPS[j]);
-                        } else if (b - a == 1) {
+                        } else if (b - a == 1 && !kul1) {
                             GPS += "B";
                             //System.out.println("KUL8!!!");
                             //System.out.println("GPS +" + GPS[j]);
@@ -163,7 +200,12 @@ public class OverordnatSystem {
                     } else if (ds.shelfDirection[ds3.orderEnd[istop]].equalsIgnoreCase("S")) {
                         int a = Integer.parseInt(path.get(j - 1).getId());
                         int b = Integer.parseInt(path.get(j).getId());
-                        if (a - b == 1) {
+                        System.out.println("ds3.orderStart[istop] i S " + ds3.orderStart[istop]);
+                        if (ds3.orderStart[istop] == 5 && a == 16 && b == 17) {
+                            GPS += "B";
+                        } else if (ds3.orderEnd[istop] == 2 && a == 31 && b == 32) {
+                            GPS += "A";
+                        } else if (a - b == 1) {
                             GPS += "B";
                             //System.out.println("KUL9!!!");
                             //System.out.println("GPS +" + GPS[j]);
@@ -176,7 +218,14 @@ public class OverordnatSystem {
                     } else if (ds.shelfDirection[ds3.orderEnd[istop]].equalsIgnoreCase("V")) {
                         int a = Integer.parseInt(path.get(j - 1).getId());
                         int b = Integer.parseInt(path.get(j).getId());
-                        if (a - b == 1) {
+                        System.out.println("ds3.orderStart[istart] " + ds3.orderStart[istart]);
+                        if (ds3.orderStart[istart] == 8 && a == 8 && b == 9) {
+                            GPS += "A";
+                        } else if (ds3.orderStart[istart] == 4) {
+                            GPS += "A";
+                        } else if (ds3.orderStart[istart] == 4) {
+                            GPS += "A";
+                        } else if (a - b == 1) {
                             GPS += "A";
                             //System.out.println("KUL11!!!");
                             //System.out.println("GPS +" + GPS[j]);
@@ -190,9 +239,9 @@ public class OverordnatSystem {
                         //System.out.println("Kul, kanske5");
                     }
                 } else if (!startnod14a) {
-                    GPS += "RR";
+                    GPS += "J";
                 } else if (!startnod14b) {
-                    GPS += "F";
+                    //GPS += "F";
                 } else {
                     int a = Integer.parseInt(path.get(j - 1).getId());
                     int b = Integer.parseInt(path.get(j).getId());
@@ -300,17 +349,18 @@ public class OverordnatSystem {
                             start = ds.shelfNode[0];
                             stop = ds.shelfNode[ds3.orderStart[j]];
                             if (start != stop) {
-                                //System.out.println("Start " + start + " Stop " + stop);
+                                System.out.println("Start " + start + " Stop " + stop);
                                 path = op.createPlan(start, stop);
                                 for (int k = 0; k < path.size() - 1; k++) {
                                     diff = diff + (int) Math.max(Math.abs(ds.nodeY[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeY[Integer.parseInt(path.get(k + 1).getId()) - 1]), Math.abs(ds.nodeX[Integer.parseInt(path.get(k).getId()) - 1] - ds.nodeX[Integer.parseInt(path.get(k + 1).getId()) - 1]));
-                                    //System.out.println("Integer.parseInt(path.get(k).getId()) " + Integer.parseInt(path.get(k).getId()));
+                                    System.out.println("Integer.parseInt(path.get(k).getId()) " + Integer.parseInt(path.get(k).getId()));
                                 }
                             } else if (start == stop && start == 24) {
                                 diff = 0;
                                 System.out.println("Hej diff = 0 start");
                             }
                         } else {
+                            System.out.println("ds4.orderEnd[i - 1] " + ds4.orderEnd[i - 1] + " ds3.orderStart[j] " + ds3.orderStart[j]);
                             start = ds.shelfNode[ds4.orderEnd[i - 1]];
                             stop = ds.shelfNode[ds3.orderStart[j]];
                             if (start != stop) {
@@ -330,8 +380,10 @@ public class OverordnatSystem {
                         System.out.println("Start " + start + " stop " + stop);
                         System.out.println("i " + i + " j " + j);
                         if (diff < mindiff) {
+                            System.out.println("Inne start mindiff");
                             for (int k = 0; k < j - 1; k++) {
-                                if (ds3.orderEnd[j] == ds3.orderStart[k]) {
+                                System.out.println("ds3.orderEnd[j] " + ds3.orderEnd[j] + " ds3.orderStart[k] " + ds3.orderStart[k]);
+                                if (ds3.orderEnd[j] == ds3.orderStart[k] + 1) {
                                     notj = true;
                                     notja[k] = j;
                                     System.out.println("CPCPCPCPCPCP! k " + k + " j " + j);
@@ -349,7 +401,6 @@ public class OverordnatSystem {
                     }
                 }
             } while (notj);
-
         }
         return ds4;
     }
@@ -387,9 +438,9 @@ public class OverordnatSystem {
 
         ds.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Lagernatverk_20130213.csv");
         ds.readNet();
-        ds.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
+        ds.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Orders_20130524.csv");
         ds.readOrders();
-        ds2.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Orders_20130211.csv");
+        ds2.setFileName("/home/itn/Desktop/bastaprojektarbetetjava/OverordnatSystem/Orders_20130524.csv");
         ds2.readOrders();
 
         cui = new ControlUI(ds);
@@ -408,6 +459,42 @@ public class OverordnatSystem {
                 System.out.println("");
             }
         }
+        
+        ds3.orders = ds2.orders;
+            ds3.fileName = ds2.fileName;
+            ds4.orders = ds2.orders;
+            ds4.fileName = ds2.fileName;
+
+            System.out.println("\n\n\n\n\n");
+
+            System.out.println("\n\n");
+            int start;
+            int stop = 0;
+            OptPlan op = new OptPlan(ds);
+
+            LinkedList<Vertex> path;
+
+            ds3 = this.onodigaforflytt(ds2);
+            ds3 = this.optorderlista(ds3, op);
+
+            Arrays.fill(ds.arcColor, 0);
+            cui.repaint();
+            //skriv ut den optimerade orderlistan i orderlistafönstret
+            /*for(int i = 0; i < ds3.orders; i++) {
+            cui.jTextArea2.append(ds3.arcStart[i] + " " + ds3.arcEnd[i]);
+            }*/
+
+            cui.jTextArea2.append("Optimerad orderlista:\n");
+            for (int j = 0; j < ds3.orders; j++) {
+                if (ds3.orderStart[j] != ds3.orderEnd[j]) {
+                    cui.jTextArea2.append("" + ds3.orderStart[j]);
+                    cui.jTextArea2.append(" " + ds3.orderEnd[j] + "\n");
+                    System.out.println("");
+                    cui.jTextArea2.setCaretPosition(cui.jTextArea2.getDocument().getLength());
+                }
+            }
+
+            System.out.println("\n\n");
 
         while (!ds.start) {
             try {
@@ -418,8 +505,8 @@ public class OverordnatSystem {
         }
 
         try {
-            //StreamConnection anslutning = (StreamConnection) Connector.open("btspp://001204067209:1");//isch robit
-            StreamConnection anslutning = (StreamConnection) Connector.open("btspp://F07BCBF04304:8");
+            StreamConnection anslutning = (StreamConnection) Connector.open("btspp://001204067209:1");//isch robit
+            //StreamConnection anslutning = (StreamConnection) Connector.open("btspp://F07BCBF04304:8");
             PrintStream bluetooth_ut = new PrintStream(anslutning.openOutputStream());
             //F07BCBF04304:8 testdator
             BufferedReader bluetooth_in = new BufferedReader(new InputStreamReader(anslutning.openInputStream()));
@@ -441,39 +528,7 @@ public class OverordnatSystem {
 
 
 
-            ds3.orders = ds2.orders;
-            ds3.fileName = ds2.fileName;
-            ds4.orders = ds2.orders;
-            ds4.fileName = ds2.fileName;
-
-            System.out.println("\n\n\n\n\n");
-
-            System.out.println("\n\n");
-            int start;
-            int stop = 0;
-            OptPlan op = new OptPlan(ds);
-
-            LinkedList<Vertex> path;
-
-            ds3 = this.onodigaforflytt(ds2);
-            ds3 = this.optorderlista(ds3, op);
-
-            //skriv ut den optimerade orderlistan i orderlistafönstret
-            /*for(int i = 0; i < ds3.orders; i++) {
-            cui.jTextArea2.append(ds3.arcStart[i] + " " + ds3.arcEnd[i]);
-            }*/
-
-            cui.jTextArea2.append("Optimerad orderlista:\n");
-            for (int j = 0; j < ds3.orders; j++) {
-                if (ds3.orderStart[j] != ds3.orderEnd[j]) {
-                    cui.jTextArea2.append("" + ds3.orderStart[j]);
-                    cui.jTextArea2.append(" " + ds3.orderEnd[j] + "\n");
-                    System.out.println("");
-                    cui.jTextArea2.setCaretPosition(cui.jTextArea2.getDocument().getLength());
-                }
-            }
-
-            System.out.println("\n\n");
+            
 
             String GPS;
             for (int i = 0; i < ds3.orders + 1; i++) {
@@ -514,16 +569,19 @@ public class OverordnatSystem {
                 //Om ingen längd på GPS-koordinaterna ges behöver ingenting skickas till roboten
                 if (GPS.length() > 0) {
                     if (meddelande_ut.equalsIgnoreCase("start")) {
+                        for (int o = GPS.length(); o < 12; o++) {
+                            GPS += "z";
+                        }
                         meddelande_ut = GPS;
                         //meddelande_ut = "x" + meddelande_ut + "z";
                         System.out.println("mellan meddelande_ut " + meddelande_ut);
-                        bluetooth_ut.println(meddelande_ut);
+                        ds.robotX = ds.nodeX[start - 1];
+                        ds.robotY = ds.nodeY[start - 1];
+                        cui.repaint();
+                        bluetooth_ut.print(meddelande_ut);
                     }
                     meddelande_ut = this.bluetoothkom(bluetooth_in);
 
-                    ds.robotX = ds.nodeX[start - 1];
-                    ds.robotY = ds.nodeY[start - 1];
-                    cui.repaint();
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException ex) {
@@ -535,9 +593,9 @@ public class OverordnatSystem {
                 //Räkna ut förflyttning av LÅDA!
                 GPS = "";
                 if (i < ds3.orders) {
-                start = (int) ds.shelfNode[ds3.orderStart[i]];
-                stop = (int) ds.shelfNode[ds3.orderEnd[i]];
-                cui.jTextArea3.setText(ds3.orderStart[i] + " -> " + ds3.orderEnd[i] + "\n");
+                    start = (int) ds.shelfNode[ds3.orderStart[i]];
+                    stop = (int) ds.shelfNode[ds3.orderEnd[i]];
+                    cui.jTextArea3.setText(ds3.orderStart[i] + " -> " + ds3.orderEnd[i] + "\n");
                 } else {
                     start = stop;
                     cui.jTextArea3.setText("Färdigt");
@@ -555,10 +613,13 @@ public class OverordnatSystem {
                 //Om ingen längd på GPS-koordinaterna ges behöver ingenting skickas till roboten
                 if (GPS.length() > 0) {
                     if (meddelande_ut.equalsIgnoreCase("start")) {
+                        for (int o = GPS.length(); o < 12; o++) {
+                            GPS += "z";
+                        }
                         meddelande_ut = GPS;
                         //meddelande_ut = "x" + meddelande_ut + "z";
                         System.out.println("under meddelande_ut " + meddelande_ut);
-                        bluetooth_ut.println(meddelande_ut);
+                        bluetooth_ut.print(meddelande_ut);
                     }
 
                     ds.robotX = ds.nodeX[start - 1];
